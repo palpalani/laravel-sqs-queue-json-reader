@@ -3,13 +3,15 @@
 namespace palPalani\SqsQueueReader\Jobs;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 
 class DispatcherJob implements ShouldQueue
 {
-    use InteractsWithQueue, Queueable, SerializesModels;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * @var mixed
@@ -38,7 +40,7 @@ class DispatcherJob implements ShouldQueue
         if (! $this->isPlain()) {
             return [
                 'job' => app('config')->get('sqs-plain.default-handler'),
-                'data' => $this->data
+                'data' => $this->data,
             ];
         }
 

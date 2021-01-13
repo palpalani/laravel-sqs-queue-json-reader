@@ -2,7 +2,6 @@
 
 namespace palPalani\SqsQueueReader\Tests;
 
-use Aws\Sqs\SqsClient;
 use palPalani\SqsQueueReader\Jobs\DispatcherJob;
 use palPalani\SqsQueueReader\Sqs\Queue;
 
@@ -17,9 +16,8 @@ class QueueTest extends \PHPUnit_Framework_TestCase
      */
     public function class_named_is_derived_from_queue_name()
     {
-
         $content = [
-            'test' => 'test'
+            'test' => 'test',
         ];
 
         $job = new DispatcherJob($content);
@@ -29,7 +27,8 @@ class QueueTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $method = new \ReflectionMethod(
-            'palPalani\SqsQueueReader\Sqs\Queue', 'createPayload'
+            'palPalani\SqsQueueReader\Sqs\Queue',
+            'createPayload'
         );
 
         $method->setAccessible(true);

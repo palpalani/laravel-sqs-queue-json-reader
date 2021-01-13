@@ -2,10 +2,10 @@
 
 namespace palPalani\SqsQueueReader;
 
-use palPalani\SqsQueueReader\Sqs\Connector;
 use Illuminate\Queue\Events\JobProcessed;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\ServiceProvider;
+use palPalani\SqsQueueReader\Sqs\Connector;
 
 class SqsQueueReaderServiceProvider extends ServiceProvider
 {

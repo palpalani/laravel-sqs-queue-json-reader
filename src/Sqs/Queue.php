@@ -2,10 +2,10 @@
 
 namespace palPalani\SqsQueueReader\Sqs;
 
-use palPalani\SqsQueueReader\Jobs\DispatcherJob;
+use Illuminate\Queue\Jobs\SqsJob;
 use Illuminate\Queue\SqsQueue;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Queue\Jobs\SqsJob;
+use palPalani\SqsQueueReader\Jobs\DispatcherJob;
 
 /**
  * Class CustomSqsQueue
@@ -23,7 +23,7 @@ class Queue extends SqsQueue
      */
     protected function createPayload($job, $data = '', $queue = null)
     {
-        if (!$job instanceof DispatcherJob) {
+        if (! $job instanceof DispatcherJob) {
             return parent::createPayload($job, $data, $queue);
         }
 
@@ -38,7 +38,7 @@ class Queue extends SqsQueue
      */
     private function getClass($queue = null)
     {
-        if (!$queue) {
+        if (! $queue) {
             return Config::get('sqs-queue-reader.default-handler');
         }
 
@@ -89,13 +89,15 @@ class Queue extends SqsQueue
      */
     private function modifyPayload($payload, $class)
     {
-        if (! is_array($payload)) $payload = json_decode($payload, true);
+        if (! is_array($payload)) {
+            $payload = json_decode($payload, true);
+        }
 
         $body = json_decode($payload['Body'], true);
 
         $body = [
             'job' => $class . '@handle',
-            'data' => isset($body['data']) ? $body['data'] : $body
+            'data' => isset($body['data']) ? $body['data'] : $body,
         ];
 
         $payload['Body'] = json_encode($body);

@@ -3,9 +3,8 @@
 namespace palPalani\SqsQueueReader\Sqs;
 
 use Aws\Sqs\SqsClient;
-use Illuminate\Support\Arr;
 use Illuminate\Queue\Connectors\SqsConnector;
-use Illuminate\Queue\Jobs\SqsJob;
+use Illuminate\Support\Arr;
 
 class Connector extends SqsConnector
 {
@@ -24,7 +23,9 @@ class Connector extends SqsConnector
         }
 
         return new Queue(
-            new SqsClient($config), $config['queue'], Arr::get($config, 'prefix', '')
+            new SqsClient($config),
+            $config['queue'],
+            Arr::get($config, 'prefix', '')
         );
     }
 }
