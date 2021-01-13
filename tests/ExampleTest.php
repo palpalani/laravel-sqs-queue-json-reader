@@ -1,6 +1,6 @@
 <?php
 
-namespace Palpalani\SqsQueueReader\Tests;
+namespace palPalani\SqsQueueReader\Tests;
 
 class ExampleTest extends TestCase
 {

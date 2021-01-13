@@ -1,9 +1,9 @@
 <?php
 
-namespace Palpalani\SqsQueueReader\Tests;
+namespace palPalani\SqsQueueReader\Tests;
 
 use Orchestra\Testbench\TestCase as Orchestra;
-use Palpalani\SqsQueueReader\SqsQueueReaderServiceProvider;
+use palPalani\SqsQueueReader\SqsQueueReaderServiceProvider;
 
 class TestCase extends Orchestra
 {
