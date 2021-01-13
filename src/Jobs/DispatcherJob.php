@@ -65,4 +65,9 @@ class DispatcherJob implements ShouldQueue
     {
         return $this->plain;
     }
+
+    public function __invoke()
+    {
+        $this->getPayload();
+    }
 }

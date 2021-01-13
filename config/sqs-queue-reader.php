@@ -9,7 +9,7 @@ return [
      * Separate queue handle with corresponding queue name as key.
      */
     'handlers' => [
-        //'stripe-webhooks' => App\Jobs\SqsHandler::class,
+        'st-webhooks' => App\Jobs\SqsHandler::class,
     ],
 
     'default-handler' => App\Jobs\SqsHandler::class

@@ -59,7 +59,7 @@ Add sqs-json connection to your config/queue.php, eg:
     ]
 ```
 
-In your .env file, choose sqs-plain as your new default queue driver:
+In your .env file, choose sqs-json as your new default queue driver:
 
 ```
 QUEUE_DRIVER=sqs-json

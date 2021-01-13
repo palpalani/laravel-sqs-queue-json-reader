@@ -24,7 +24,7 @@ class SqsQueueReaderServiceProvider extends ServiceProvider
 
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/sqs-queue-reader.php', 'laravel-sqs-queue-json-reader');
+        $this->mergeConfigFrom(__DIR__ . '/../config/sqs-queue-reader.php', 'sqs-queue-reader');
 
         $this->app->booted(function () {
             $this->app['queue']->extend('sqs-json', static function () {

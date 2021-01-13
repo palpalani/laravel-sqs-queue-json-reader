@@ -5,6 +5,7 @@ namespace palPalani\SqsQueueReader\Sqs;
 use Illuminate\Queue\Jobs\SqsJob;
 use Illuminate\Queue\SqsQueue;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Log;
 use palPalani\SqsQueueReader\Jobs\DispatcherJob;
 
 /**
@@ -28,7 +29,7 @@ class Queue extends SqsQueue
         }
 
         $handlerJob = $this->getClass($queue) . '@handle';
-
+        Log::debug('$job->isPlain()====', [$job->isPlain()]);
         return $job->isPlain() ? json_encode($job->getPayload()) : json_encode(['job' => $handlerJob, 'data' => $job->getPayload()]);
     }
 
@@ -62,7 +63,11 @@ class Queue extends SqsQueue
         $response = $this->sqs->receiveMessage([
             'QueueUrl' => $queue,
             'AttributeNames' => ['ApproximateReceiveCount'],
+            'MaxNumberOfMessages' => 1,
+            'MessageAttributeNames' => ['All'],
         ]);
+
+        Log::debug('MessageAttributeNames=', [$response]);
 
         if (isset($response['Messages']) && count($response['Messages']) > 0) {
             $queueId = explode('/', $queue);
