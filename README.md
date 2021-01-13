@@ -1,11 +1,16 @@
-# A custom SQS queue reader for Laravel that supports plain JSON payloads.
+# Custom SQS queue reader for Laravel
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/palpalani/laravel-sqs-queue-json-reader.svg?style=flat-square)](https://packagist.org/packages/palpalani/laravel-sqs-queue-json-reader)
 [![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/palpalani/laravel-sqs-queue-json-reader/run-tests?label=tests)](https://github.com/palpalani/laravel-sqs-queue-json-reader/actions?query=workflow%3ATests+branch%3Amaster)
 [![Total Downloads](https://img.shields.io/packagist/dt/palpalani/laravel-sqs-queue-json-reader.svg?style=flat-square)](https://packagist.org/packages/palpalani/laravel-sqs-queue-json-reader)
 
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+Custom SQS queue reader for Laravel that supports JSON payloads. 
+Out of the box, Laravel expects SQS messages to be generated in a 
+specific format - format that includes job handler class and a serialized job.
+
+But in certain cases you may want to parse messages from third party 
+applications, custom JSON messages and so on.
 
 ## Installation
 
@@ -62,7 +67,7 @@ QUEUE_DRIVER=sqs-json
 
 Dispatching to SQS
 
-If you plan to push plain messages from Laravel or Lumen, you can rely on DispatcherJob:
+If you plan to push plain messages from Laravel, you can rely on DispatcherJob:
 
 ```php
 use palPalani\SqsQueueReader\Jobs\DispatcherJob;

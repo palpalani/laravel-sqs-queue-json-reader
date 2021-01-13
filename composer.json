@@ -1,6 +1,6 @@
 {
     "name": "palpalani/laravel-sqs-queue-json-reader",
-    "description": "Custom SQS queue reader for Laravel that supports plain JSON payloads.",
+    "description": "Custom SQS queue reader for Laravel",
     "keywords": [
         "palpalani",
         "laravel-sqs-queue-json-reader"
