@@ -32,7 +32,7 @@ class Queue extends SqsQueue
 
         return $job->isPlain() ? json_encode($job->getPayload()) : json_encode([
             'job' => $handlerJob,
-            'data' => $job->getPayload()
+            'data' => $job->getPayload(),
         ]);
     }
 
