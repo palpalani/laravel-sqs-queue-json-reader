@@ -34,7 +34,9 @@ return [
      * Separate queue handle with corresponding queue name as key.
      */
     'handlers' => [
-        //'stripe-webhooks' => App\Jobs\SqsHandler::class,
+        //'stripe-webhooks' => App\Jobs\StripeHandler::class,
+        //'mailgun-webhooks' => App\Jobs\MailgunHandler::class,
+        //'shopify-webhooks' => App\Jobs\ShopifyHandler::class,
     ],
 
     'default-handler' => App\Jobs\SqsHandler::class
@@ -43,18 +45,18 @@ return [
 
 If queue is not found in 'handlers' array, SQS payload is passed to default handler.
 
-Add sqs-json connection to your config/queue.php, eg:
+Add `sqs-json` connection to your config/queue.php, Ex:
 
 ```php
     [
-        // Add connection
+        // Add new SQS connection
         'sqs-json' => [
             'driver' => 'sqs-json',
-            'key'    => env('AWS_KEY', ''),
-            'secret' => env('AWS_SECRET', ''),
-            'prefix' => 'https://sqs.us-west-2.amazonaws.com/3242342351/',
-            'queue'  => 'stripe-webhooks',
-            'region' => 'ap-southeast-2',
+            'key'    => env('AWS_ACCESS_KEY_ID', ''),
+            'secret' => env('AWS_SECRET_ACCESS_KEY', ''),
+            'prefix' => env('SQS_PREFIX', 'https://sqs.us-west-2.amazonaws.com/1234567890'),
+            'queue'  => env('SQS_QUEUE', 'stripe-webhooks'),
+            'region' => env('AWS_DEFAULT_REGION', 'us-west-2'),
         ],
     ]
 ```
@@ -78,7 +80,7 @@ class ExampleController extends Controller
     {
         // Create a PHP object
         $object = [
-            'music' => 'Sample message',
+            'music' => 'Sample SQS message',
             'time' => time()
         ];
 
@@ -109,15 +111,18 @@ handler in the config file and implement a handler class as follows:
 ```php
 use Illuminate\Contracts\Queue\Job as LaravelJob;
 
-class HandlerJob extends Job
+class SqsHandlerJob extends Job
 {
+    /**
+     * @var null|array $data
+     */
     protected $data;
 
     /**
      * @param LaravelJob $job
-     * @param array $data
+     * @param null|array $data
      */
-    public function handle(LaravelJob $job, array $data)
+    public function handle(LaravelJob $job, ?array $data): void
     {
         // This is incoming JSON payload, already decoded to an array
         var_dump($data);

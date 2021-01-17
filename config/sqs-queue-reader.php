@@ -9,7 +9,9 @@ return [
      * Separate queue handle with corresponding queue name as key.
      */
     'handlers' => [
-        'st-webhooks' => App\Jobs\SqsHandler::class,
+        //'stripe-webhooks' => App\Jobs\StripeHandler::class,
+        //'mailgun-webhooks' => App\Jobs\MailgunHandler::class,
+        //'shopify-webhooks' => App\Jobs\ShopifyHandler::class,
     ],
 
     'default-handler' => App\Jobs\SqsHandler::class
