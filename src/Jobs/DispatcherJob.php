@@ -9,9 +9,7 @@ use Illuminate\Queue\SerializesModels;
 
 class DispatcherJob implements ShouldQueue
 {
-    use InteractsWithQueue;
-    use Queueable;
-    use SerializesModels;
+    use InteractsWithQueue, Queueable, SerializesModels;
 
     /**
      * @var mixed

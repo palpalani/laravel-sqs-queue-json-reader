@@ -9,7 +9,7 @@ use palPalani\SqsQueueReader\Sqs\Connector;
 
 class SqsQueueReaderServiceProvider extends ServiceProvider
 {
-    public function boot()
+    public function boot(): void
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
@@ -22,7 +22,7 @@ class SqsQueueReaderServiceProvider extends ServiceProvider
         }
     }
 
-    public function register()
+    public function register(): void
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/sqs-queue-reader.php', 'sqs-queue-reader');
 
