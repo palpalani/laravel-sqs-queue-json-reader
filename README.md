@@ -5,11 +5,11 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/palpalani/laravel-sqs-queue-json-reader.svg?style=flat-square)](https://packagist.org/packages/palpalani/laravel-sqs-queue-json-reader)
 
 
-Custom SQS queue reader for Laravel that supports JSON payloads. 
-Out of the box, Laravel expects SQS messages to be generated in a 
-specific format - format that includes job handler class and a serialized job.
+Custom SQS queue reader for Laravel that supports plain JSON payloads. 
+Laravel expects SQS messages to be generated in a 
+specific format that includes job handler class and a serialized job.
 
-But in certain cases you may want to parse messages from third party 
+But in certain cases you may want to parse messages from 3rd party 
 applications, custom JSON messages and so on.
 
 ## Installation
@@ -96,16 +96,19 @@ class ExampleController extends Controller
     }
 }
 ```
-This will push the following JSON object to SQS:
+Above code will push the following JSON object to SQS queue:
 
 ```json
-{"job":"App\\Jobs\\SqsHandler@handle","data":{"music":"Sample message","time":1464411642}}
+{"job":"App\\Jobs\\SqsHandler@handle","data":{"music":"Sample SQS message","time":1464511672}}
 ```
 
-'job' field is not used, actually. It's just kept for compatibility.
+'job' field is not used, actually. It's just kept for compatibility with Laravel
+Framework.
 
-Receiving from SQS
-If a third-party application is creating custom-format JSON messages, just add a 
+### Receiving from SQS
+
+If a 3rd-party application or API Gateway to SQS implementation is creating 
+custom-format JSON messages, just add a 
 handler in the config file and implement a handler class as follows:
 
 ```php
