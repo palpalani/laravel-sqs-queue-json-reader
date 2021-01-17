@@ -29,16 +29,18 @@ class Queue extends SqsQueue
         }
 
         $handlerJob = $this->getClass($queue) . '@handle';
-        Log::debug('$job->isPlain()====', [$job->isPlain()]);
 
-        return $job->isPlain() ? json_encode($job->getPayload()) : json_encode(['job' => $handlerJob, 'data' => $job->getPayload()]);
+        return $job->isPlain() ? json_encode($job->getPayload()) : json_encode([
+            'job' => $handlerJob,
+            'data' => $job->getPayload()
+        ]);
     }
 
     /**
      * @param $queue
      * @return string
      */
-    private function getClass($queue = null)
+    private function getClass($queue = null): string
     {
         if (! $queue) {
             return Config::get('sqs-queue-reader.default-handler');
@@ -64,13 +66,14 @@ class Queue extends SqsQueue
         $response = $this->sqs->receiveMessage([
             'QueueUrl' => $queue,
             'AttributeNames' => ['ApproximateReceiveCount'],
-            'MaxNumberOfMessages' => 1,
+            'MaxNumberOfMessages' => 5,
             'MessageAttributeNames' => ['All'],
         ]);
 
         Log::debug('MessageAttributeNames=', [$response]);
 
         if (isset($response['Messages']) && count($response['Messages']) > 0) {
+            Log::debug('MessageAttributeNames=', [$response['Messages']]);
             $queueId = explode('/', $queue);
             $queueId = array_pop($queueId);
 
