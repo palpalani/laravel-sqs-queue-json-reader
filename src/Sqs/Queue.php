@@ -130,7 +130,7 @@ class Queue extends SqsQueue
             'MessageId' => $messageId,
             'ReceiptHandle' => $receiptHandle,
             'Body' => json_encode($body),
-            'Attributes' => $attributes
+            'Attributes' => $attributes,
         ];
 
         //return $newPayload;
