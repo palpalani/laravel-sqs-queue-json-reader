@@ -80,7 +80,7 @@ class Queue extends SqsQueue
                 : $this->container['config']->get('sqs-queue-reader.default-handler');
 
             $response = $this->modifyPayload($response['Messages'], $class);
-            Log::debug('New $response==', [$response]);
+            Log::debug('New $responseV2==', [$response]);
             if (preg_match('/(5\.[4-8]\..*)|(6\.[0-9]*\..*)|(7\.[0-9]*\..*)|(8\.[0-9]*\..*)/', $this->container->version())) {
                 return new SqsJob($this->container, $this->sqs, $response, $this->connectionName, $queue);
             }
@@ -112,10 +112,13 @@ class Queue extends SqsQueue
         */
 
         $body = [];
+        $attributes = [];
         foreach ($payload as $item) {
             //Log::debug('Each Messages==', [$item]);
             $body[] = json_decode($item['Body'], true);
             $attributes = $item['Attributes'];
+            $messageId = $item['MessageId'];
+            $receiptHandle = $item['ReceiptHandle'];
         }
 
         $body = [
@@ -123,10 +126,14 @@ class Queue extends SqsQueue
             'data' => $body,
         ];
 
-        $newPayload['Body'] = json_encode($body);
-        $newPayload['Attributes'] = $attributes;
+        return [
+            'MessageId' => $messageId,
+            'ReceiptHandle' => $receiptHandle,
+            'Body' => json_encode($body),
+            'Attributes' => $attributes
+        ];
 
-        return $newPayload;
+        //return $newPayload;
     }
 
     /**
