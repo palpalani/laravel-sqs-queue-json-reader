@@ -113,6 +113,7 @@ class Queue extends SqsQueue
 
         $body = [];
         foreach ($payload as $item) {
+            Log::debug('Each Messages==', [$item]);
             $body[] = json_decode($item['Body'], true);
         }
 
