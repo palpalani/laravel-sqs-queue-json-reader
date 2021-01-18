@@ -69,11 +69,9 @@ class Queue extends SqsQueue
             'MaxNumberOfMessages' => 5,
             'MessageAttributeNames' => ['All'],
         ]);
-
-        Log::debug('MessageAttributeNames=', [$response]);
-
+        
         if (isset($response['Messages']) && count($response['Messages']) > 0) {
-            Log::debug('MessageAttributeNames=', [$response['Messages']]);
+            Log::debug('Messages==', [$response['Messages']]);
             $queueId = explode('/', $queue);
             $queueId = array_pop($queueId);
 
@@ -81,7 +79,7 @@ class Queue extends SqsQueue
                 ? $this->container['config']->get('sqs-queue-reader.handlers')[$queueId]
                 : $this->container['config']->get('sqs-queue-reader.default-handler');
 
-            $response = $this->modifyPayload($response['Messages'][0], $class);
+            $response = $this->modifyPayload($response['Messages'], $class);
 
             if (preg_match('/(5\.[4-8]\..*)|(6\.[0-9]*\..*)|(7\.[0-9]*\..*)|(8\.[0-9]*\..*)/', $this->container->version())) {
                 return new SqsJob($this->container, $this->sqs, $response, $this->connectionName, $queue);
