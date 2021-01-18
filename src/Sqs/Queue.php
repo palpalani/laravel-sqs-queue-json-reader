@@ -69,7 +69,7 @@ class Queue extends SqsQueue
             'MaxNumberOfMessages' => 5,
             'MessageAttributeNames' => ['All'],
         ]);
-        
+
         if (isset($response['Messages']) && count($response['Messages']) > 0) {
             Log::debug('Messages==', [$response['Messages']]);
             $queueId = explode('/', $queue);
@@ -100,11 +100,25 @@ class Queue extends SqsQueue
             $payload = json_decode($payload, true);
         }
 
+        /*
         $body = json_decode($payload['Body'], true);
 
         $body = [
             'job' => $class . '@handle',
             'data' => isset($body['data']) ? $body['data'] : $body,
+        ];
+
+        $payload['Body'] = json_encode($body);
+        */
+
+        $body = [];
+        foreach ($payload as $item) {
+            $body[] = json_decode($item['Body'], true);
+        }
+
+        $body = [
+            'job' => $class . '@handle',
+            'data' => $body,
         ];
 
         $payload['Body'] = json_encode($body);
