@@ -80,7 +80,7 @@ class Queue extends SqsQueue
                 : $this->container['config']->get('sqs-queue-reader.default-handler');
 
             $response = $this->modifyPayload($response['Messages'], $class);
-
+            Log::debug('New $response==', [$response]);
             if (preg_match('/(5\.[4-8]\..*)|(6\.[0-9]*\..*)|(7\.[0-9]*\..*)|(8\.[0-9]*\..*)/', $this->container->version())) {
                 return new SqsJob($this->container, $this->sqs, $response, $this->connectionName, $queue);
             }
@@ -113,7 +113,7 @@ class Queue extends SqsQueue
 
         $body = [];
         foreach ($payload as $item) {
-            Log::debug('Each Messages==', [$item]);
+            //Log::debug('Each Messages==', [$item]);
             $body[] = json_decode($item['Body'], true);
         }
 
