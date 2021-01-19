@@ -19,9 +19,9 @@ class SqsQueueReaderServiceProvider extends ServiceProvider
 
             Queue::after(static function (JobProcessed $event) {
                 $command = $event->data['data']['command'] ?? 'no command data';
-                Log::debug('Job data==', [$command]);
-                $data = unserialize($event->data['data']);
-                Log::debug('Job data==', [$data]);
+                Log::debug('Job Cdata==', [$command]);
+                $data = $event->data ?? 'no data...';
+                Log::debug('Job data==', [unserialize($data)]);
                 $event->job->delete();
             });
         }
