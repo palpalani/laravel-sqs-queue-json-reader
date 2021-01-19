@@ -18,7 +18,7 @@ class SqsQueueReaderServiceProvider extends ServiceProvider
             ], 'config');
 
             Queue::after(static function (JobProcessed $event) {
-                Log::debug('Job data==', [$event->job]);
+                Log::debug('Job data==', [$event->job['Body'] ?? $event->job[0]['Body'] ?? 'Body not found']);
                 $event->job->delete();
             });
         }
