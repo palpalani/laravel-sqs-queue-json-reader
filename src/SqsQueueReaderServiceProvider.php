@@ -3,6 +3,7 @@
 namespace palPalani\SqsQueueReader;
 
 use Illuminate\Queue\Events\JobProcessed;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\ServiceProvider;
 use palPalani\SqsQueueReader\Sqs\Connector;
@@ -17,6 +18,7 @@ class SqsQueueReaderServiceProvider extends ServiceProvider
             ], 'config');
 
             Queue::after(static function (JobProcessed $event) {
+                Log::debug('Job data==', [$event->job]);
                 $event->job->delete();
             });
         }

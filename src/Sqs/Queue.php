@@ -6,6 +6,7 @@ use Illuminate\Queue\Jobs\SqsJob;
 use Illuminate\Queue\SqsQueue;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use palPalani\SqsQueueReader\Jobs\DispatcherJob;
 
 /**
@@ -81,11 +82,8 @@ class Queue extends SqsQueue
 
             $response = $this->modifyPayload($response['Messages'], $class);
             Log::debug('New $responseV2==', [$response]);
-            if (preg_match('/(5\.[4-8]\..*)|(6\.[0-9]*\..*)|(7\.[0-9]*\..*)|(8\.[0-9]*\..*)/', $this->container->version())) {
-                return new SqsJob($this->container, $this->sqs, $response, $this->connectionName, $queue);
-            }
 
-            return new SqsJob($this->container, $this->sqs, $queue, $response);
+            return new SqsJob($this->container, $this->sqs, $response, $this->connectionName, $queue);
         }
     }
 
@@ -122,6 +120,7 @@ class Queue extends SqsQueue
         }
 
         $body = [
+            'uuid' => (string) Str::uuid(),
             'job' => $class . '@handle',
             'data' => $body,
         ];
