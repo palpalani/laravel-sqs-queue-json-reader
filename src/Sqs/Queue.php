@@ -2,6 +2,7 @@
 
 namespace palPalani\SqsQueueReader\Sqs;
 
+use Aws\Exception\AwsException;
 use Illuminate\Queue\Jobs\SqsJob;
 use Illuminate\Queue\SqsQueue;
 use Illuminate\Support\Facades\Config;
@@ -64,26 +65,31 @@ class Queue extends SqsQueue
     {
         $queue = $this->getQueue($queue);
 
-        $response = $this->sqs->receiveMessage([
-            'QueueUrl' => $queue,
-            'AttributeNames' => ['ApproximateReceiveCount'],
-            'MaxNumberOfMessages' => 5,
-            'MessageAttributeNames' => ['All'],
-        ]);
+        try {
+            $response = $this->sqs->receiveMessage([
+                'QueueUrl' => $queue,
+                'AttributeNames' => ['ApproximateReceiveCount'],
+                'MaxNumberOfMessages' => 5,
+                'MessageAttributeNames' => ['All'],
+            ]);
 
-        if (isset($response['Messages']) && count($response['Messages']) > 0) {
-            Log::debug('Messages==', [$response['Messages']]);
-            $queueId = explode('/', $queue);
-            $queueId = array_pop($queueId);
+            if (isset($response['Messages']) && count($response['Messages']) > 0) {
+                Log::debug('Messages==', [$response['Messages']]);
+                $queueId = explode('/', $queue);
+                $queueId = array_pop($queueId);
 
-            $class = (array_key_exists($queueId, $this->container['config']->get('sqs-queue-reader.handlers')))
-                ? $this->container['config']->get('sqs-queue-reader.handlers')[$queueId]
-                : $this->container['config']->get('sqs-queue-reader.default-handler');
+                $class = (array_key_exists($queueId, $this->container['config']->get('sqs-queue-reader.handlers')))
+                    ? $this->container['config']->get('sqs-queue-reader.handlers')[$queueId]
+                    : $this->container['config']->get('sqs-queue-reader.default-handler');
 
-            $response = $this->modifyPayload($response['Messages'], $class);
-            Log::debug('New $responseV2==', [$response]);
+                $response = $this->modifyPayload($response['Messages'], $class);
+                Log::debug('New $responseV2==', [$response]);
 
-            return new SqsJob($this->container, $this->sqs, $response, $this->connectionName, $queue);
+                return new SqsJob($this->container, $this->sqs, $response, $this->connectionName, $queue);
+            }
+        } catch (AwsException $e) {
+            $msg = 'Line: '. $e->getLine() .', '. $e->getFile() . ', '. $e->getMessage();
+            throw new \RuntimeException("Aws SQS error: " . $msg);
         }
     }
 
@@ -111,9 +117,19 @@ class Queue extends SqsQueue
 
         $body = [];
         $attributes = [];
+        $batchIds = [];
+
         foreach ($payload as $item) {
             //Log::debug('Each Messages==', [$item]);
-            $body[] = json_decode($item['Body'], true);
+            //$body[] = json_decode($item['Body'], true);
+            $body[] = [
+                'messages' => json_decode($item['Body'], true),
+                'attributes' => $item['Attributes'],
+                'batchIds' => [
+                    'Id' => $item['MessageId'],
+                    'ReceiptHandle' => $item['ReceiptHandle'],
+                ]
+            ];
             $attributes = $item['Attributes'];
             $messageId = $item['MessageId'];
             $receiptHandle = $item['ReceiptHandle'];
