@@ -89,6 +89,7 @@ class Queue extends SqsQueue
             }
         } catch (AwsException $e) {
             $msg = 'Line: '. $e->getLine() .', '. $e->getFile() . ', '. $e->getMessage();
+
             throw new \RuntimeException("Aws SQS error: " . $msg);
         }
     }
@@ -128,7 +129,7 @@ class Queue extends SqsQueue
                 'batchIds' => [
                     'Id' => $item['MessageId'],
                     'ReceiptHandle' => $item['ReceiptHandle'],
-                ]
+                ],
             ];
             $attributes = $item['Attributes'];
             $messageId = $item['MessageId'];

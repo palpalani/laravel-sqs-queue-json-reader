@@ -39,6 +39,7 @@ class SqsQueueReaderServiceProvider extends ServiceProvider
                             $msg .= sprintf("Deleting message failed, code = %s, id = %s, msg = %s, senderfault = %s", $failed['Code'], $failed['Id'], $failed['Message'], $failed['SenderFault']);
                         }
                         Log::error('Cannot delete some SQS messages: ', [$msg]);
+
                         throw new \RuntimeException("Cannot delete some messages, consult log for more info!");
                     }
                 }
