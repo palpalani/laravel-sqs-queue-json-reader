@@ -86,7 +86,7 @@ class Queue extends SqsQueue
                     ? $this->container['config']->get('sqs-queue-reader.handlers')[$queueId]
                     : $this->container['config']->get('sqs-queue-reader.default-handler');
 
-                if($count === 1) {
+                if ($count === 1) {
                     $response = $this->modifySinglePayload($response['Messages'][0], $class);
                 } else {
                     $response = $this->modifyMultiplePayload($response['Messages'], $class);

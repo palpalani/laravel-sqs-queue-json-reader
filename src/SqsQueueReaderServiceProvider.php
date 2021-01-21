@@ -24,7 +24,7 @@ class SqsQueueReaderServiceProvider extends ServiceProvider
                     ? Config::get('sqs-queue-reader.handlers')[$queue]['count']
                     : Config::get('sqs-queue-reader.default-handler')['count'];
 
-                if($count === 1) {
+                if ($count === 1) {
                     $event->job->delete();
                 } else {
                     $data = $event->job->payload();
