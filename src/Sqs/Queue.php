@@ -48,7 +48,8 @@ class Queue extends SqsQueue
             return Config::get('sqs-queue-reader.default-handler');
         }
 
-        $queue = end(explode('/', $queue));
+        $queueArray = explode('/', $queue);
+        $queue = end($queueArray);
 
         return (array_key_exists($queue, Config::get('sqs-queue-reader.handlers')))
             ? Config::get('sqs-queue-reader.handlers')[$queue]
@@ -64,12 +65,15 @@ class Queue extends SqsQueue
     public function pop($queue = null)
     {
         $queue = $this->getQueue($queue);
+        $count = (array_key_exists($queue, Config::get('sqs-queue-reader.handlers')))
+            ? Config::get('sqs-queue-reader.handlers')[$queue]['count']
+            : Config::get('sqs-queue-reader.default-handler')['count'];
 
         try {
             $response = $this->sqs->receiveMessage([
                 'QueueUrl' => $queue,
                 'AttributeNames' => ['ApproximateReceiveCount'],
-                'MaxNumberOfMessages' => 5,
+                'MaxNumberOfMessages' => $count,
                 'MessageAttributeNames' => ['All'],
             ]);
 
@@ -82,7 +86,11 @@ class Queue extends SqsQueue
                     ? $this->container['config']->get('sqs-queue-reader.handlers')[$queueId]
                     : $this->container['config']->get('sqs-queue-reader.default-handler');
 
-                $response = $this->modifyPayload($response['Messages'], $class);
+                if($count === 1) {
+                    $response = $this->modifySinglePayload($response['Messages'][0], $class);
+                } else {
+                    $response = $this->modifyMultiplePayload($response['Messages'], $class);
+                }
                 Log::debug('New $responseV2==', [$response]);
 
                 return new SqsJob($this->container, $this->sqs, $response, $this->connectionName, $queue);
@@ -99,7 +107,30 @@ class Queue extends SqsQueue
      * @param string $class
      * @return array
      */
-    private function modifyPayload($payload, $class)
+    private function modifySinglePayload($payload, $class)
+    {
+        if (! is_array($payload)) {
+            $payload = json_decode($payload, true);
+        }
+
+        $body = json_decode($payload['Body'], true);
+
+        $body = [
+            'job' => $class . '@handle',
+            'data' => isset($body['data']) ? $body['data'] : $body,
+        ];
+
+        $payload['Body'] = json_encode($body);
+
+        return $payload;
+    }
+
+    /**
+     * @param string|array $payload
+     * @param string $class
+     * @return array
+     */
+    private function modifyMultiplePayload($payload, $class)
     {
         if (! is_array($payload)) {
             $payload = json_decode($payload, true);
