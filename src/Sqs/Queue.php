@@ -52,8 +52,8 @@ class Queue extends SqsQueue
         $queue = end($queueArray);
 
         return (array_key_exists($queue, Config::get('sqs-queue-reader.handlers')))
-            ? Config::get('sqs-queue-reader.handlers')[$queue]
-            : Config::get('sqs-queue-reader.default-handler');
+            ? Config::get('sqs-queue-reader.handlers')[$queue]['class']
+            : Config::get('sqs-queue-reader.default-handler')['class'];
     }
 
     /**
@@ -83,8 +83,8 @@ class Queue extends SqsQueue
                 $queueId = array_pop($queueId);
 
                 $class = (array_key_exists($queueId, $this->container['config']->get('sqs-queue-reader.handlers')))
-                    ? $this->container['config']->get('sqs-queue-reader.handlers')[$queueId]
-                    : $this->container['config']->get('sqs-queue-reader.default-handler');
+                    ? $this->container['config']->get('sqs-queue-reader.handlers')[$queueId]['class']
+                    : $this->container['config']->get('sqs-queue-reader.default-handler')['class'];
 
                 if ($count === 1) {
                     $response = $this->modifySinglePayload($response['Messages'][0], $class);
