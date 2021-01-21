@@ -86,6 +86,7 @@ class Queue extends SqsQueue
                     ? $this->container['config']->get('sqs-queue-reader.handlers')[$queueId]['class']
                     : $this->container['config']->get('sqs-queue-reader.default-handler')['class'];
 
+                Log::debug('Count, class==', [$count, $class]);
                 if ($count === 1) {
                     $response = $this->modifySinglePayload($response['Messages'][0], $class);
                 } else {
@@ -116,6 +117,7 @@ class Queue extends SqsQueue
         $body = json_decode($payload['Body'], true);
 
         $body = [
+            'uuid' => (string) Str::uuid(),
             'job' => $class . '@handle',
             'data' => isset($body['data']) ? $body['data'] : $body,
         ];
