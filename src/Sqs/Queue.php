@@ -69,13 +69,13 @@ class Queue extends SqsQueue
         $queueId = explode('/', $queue);
         $queueId = array_pop($queueId);
 
-        $count = (array_key_exists($queue, Config::get('sqs-queue-reader.handlers')))
-            ? Config::get('sqs-queue-reader.handlers')[$queue]['count']
+        $count = (array_key_exists($queueId, Config::get('sqs-queue-reader.handlers')))
+            ? Config::get('sqs-queue-reader.handlers')[$queueId]['count']
             : Config::get('sqs-queue-reader.default-handler')['count'];
 
         try {
             $response = $this->sqs->receiveMessage([
-                'QueueUrl' => $queue,
+                'QueueUrl' => $queueId,
                 'AttributeNames' => ['ApproximateReceiveCount'],
                 'MaxNumberOfMessages' => $count,
                 'MessageAttributeNames' => ['All'],
@@ -95,7 +95,7 @@ class Queue extends SqsQueue
                 }
                 Log::debug('New $responseV2==', [$response]);
 
-                return new SqsJob($this->container, $this->sqs, $response, $this->connectionName, $queue);
+                return new SqsJob($this->container, $this->sqs, $response, $this->connectionName, $queueId);
             }
         } catch (AwsException $e) {
             $msg = 'Line: '. $e->getLine() .', '. $e->getFile() . ', '. $e->getMessage();
