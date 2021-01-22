@@ -20,10 +20,11 @@ class SqsQueueReaderServiceProvider extends ServiceProvider
 
             Queue::after(static function (JobProcessed $event) {
                 $queue = $event->job->getQueue();
-
+                Log::debug('$queue=', [$queue, $event->connectionName]);
                 $queueId = explode('/', $queue);
                 $queueId = array_pop($queueId);
-
+                $data = $event->job->payload();
+                Log::debug('Job payload==', [$data]);
                 $count = (array_key_exists($queueId, Config::get('sqs-queue-reader.handlers')))
                     ? Config::get('sqs-queue-reader.handlers')[$queueId]['count']
                     : Config::get('sqs-queue-reader.default-handler')['count'];
