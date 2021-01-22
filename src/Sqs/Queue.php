@@ -141,12 +141,11 @@ class Queue extends SqsQueue
 
         $body = [];
         $attributes = [];
-        $batchIds = [];
 
-        foreach ($payload as $item) {
+        foreach ($payload as $k => $item) {
             //Log::debug('Each Messages==', [$item]);
             //$body[] = json_decode($item['Body'], true);
-            $body[] = [
+            $body[$k] = [
                 'messages' => json_decode($item['Body'], true),
                 'attributes' => $item['Attributes'],
                 'batchIds' => [
@@ -171,8 +170,6 @@ class Queue extends SqsQueue
             'Body' => json_encode($body),
             'Attributes' => $attributes,
         ];
-
-        //return $newPayload;
     }
 
     /**
