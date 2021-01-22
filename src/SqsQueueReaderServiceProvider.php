@@ -20,8 +20,12 @@ class SqsQueueReaderServiceProvider extends ServiceProvider
 
             Queue::after(static function (JobProcessed $event) {
                 $queue = $event->job->getQueue();
-                $count = (array_key_exists($queue, Config::get('sqs-queue-reader.handlers')))
-                    ? Config::get('sqs-queue-reader.handlers')[$queue]['count']
+
+                $queueId = explode('/', $queue);
+                $queueId = array_pop($queueId);
+
+                $count = (array_key_exists($queueId, Config::get('sqs-queue-reader.handlers')))
+                    ? Config::get('sqs-queue-reader.handlers')[$queueId]['count']
                     : Config::get('sqs-queue-reader.default-handler')['count'];
 
                 if ($count === 1) {
@@ -41,7 +45,7 @@ class SqsQueueReaderServiceProvider extends ServiceProvider
                             'QueueUrl' => $queue,
                         ]);
 
-                        if ($result['Failed']) {
+                        if (isset($result['Failed'])) {
                             $msg = '';
                             foreach ($result['Failed'] as $failed) {
                                 $msg .= sprintf("Deleting message failed, code = %s, id = %s, msg = %s, senderfault = %s", $failed['Code'], $failed['Id'], $failed['Message'], $failed['SenderFault']);
@@ -50,6 +54,7 @@ class SqsQueueReaderServiceProvider extends ServiceProvider
 
                             throw new \RuntimeException("Cannot delete some messages, consult log for more info!");
                         }
+                        Log::info('Message remove report:', [$result]);
                     }
                 }
             });

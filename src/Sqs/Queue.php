@@ -48,11 +48,11 @@ class Queue extends SqsQueue
             return Config::get('sqs-queue-reader.default-handler');
         }
 
-        $queueArray = explode('/', $queue);
-        $queue = end($queueArray);
+        $queueId = explode('/', $queue);
+        $queueId = array_pop($queueId);
 
-        return (array_key_exists($queue, Config::get('sqs-queue-reader.handlers')))
-            ? Config::get('sqs-queue-reader.handlers')[$queue]['class']
+        return (array_key_exists($queueId, Config::get('sqs-queue-reader.handlers')))
+            ? Config::get('sqs-queue-reader.handlers')[$queueId]['class']
             : Config::get('sqs-queue-reader.default-handler')['class'];
     }
 
@@ -65,6 +65,10 @@ class Queue extends SqsQueue
     public function pop($queue = null)
     {
         $queue = $this->getQueue($queue);
+
+        $queueId = explode('/', $queue);
+        $queueId = array_pop($queueId);
+
         $count = (array_key_exists($queue, Config::get('sqs-queue-reader.handlers')))
             ? Config::get('sqs-queue-reader.handlers')[$queue]['count']
             : Config::get('sqs-queue-reader.default-handler')['count'];
@@ -79,9 +83,6 @@ class Queue extends SqsQueue
 
             if (isset($response['Messages']) && count($response['Messages']) > 0) {
                 Log::debug('Messages==', [$response['Messages']]);
-                $queueId = explode('/', $queue);
-                $queueId = array_pop($queueId);
-
                 $class = (array_key_exists($queueId, $this->container['config']->get('sqs-queue-reader.handlers')))
                     ? $this->container['config']->get('sqs-queue-reader.handlers')[$queueId]['class']
                     : $this->container['config']->get('sqs-queue-reader.default-handler')['class'];
@@ -137,17 +138,6 @@ class Queue extends SqsQueue
         if (! is_array($payload)) {
             $payload = json_decode($payload, true);
         }
-
-        /*
-        $body = json_decode($payload['Body'], true);
-
-        $body = [
-            'job' => $class . '@handle',
-            'data' => isset($body['data']) ? $body['data'] : $body,
-        ];
-
-        $payload['Body'] = json_encode($body);
-        */
 
         $body = [];
         $attributes = [];
