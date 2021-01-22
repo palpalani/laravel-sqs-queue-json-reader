@@ -75,7 +75,7 @@ class Queue extends SqsQueue
 
         try {
             $response = $this->sqs->receiveMessage([
-                'QueueUrl' => $queueId,
+                'QueueUrl' => $queue,
                 'AttributeNames' => ['ApproximateReceiveCount'],
                 'MaxNumberOfMessages' => $count,
                 'MessageAttributeNames' => ['All'],
