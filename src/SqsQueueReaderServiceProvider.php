@@ -19,43 +19,44 @@ class SqsQueueReaderServiceProvider extends ServiceProvider
             ], 'config');
 
             Queue::after(static function (JobProcessed $event) {
-                $queue = $event->job->getQueue();
-                Log::debug('$queue=', [$queue, $event->connectionName]);
-                $queueId = explode('/', $queue);
-                $queueId = array_pop($queueId);
-                $data = $event->job->payload();
-                Log::debug('Job payload==', [$data]);
-                $count = (array_key_exists($queueId, Config::get('sqs-queue-reader.handlers')))
-                    ? Config::get('sqs-queue-reader.handlers')[$queueId]['count']
-                    : Config::get('sqs-queue-reader.default-handler')['count'];
+                if ($event->connectionName === 'sqs-json') {
+                    $queue = $event->job->getQueue();
 
-                if ($count === 1) {
-                    $event->job->delete();
-                } else {
-                    $data = $event->job->payload();
-                    Log::debug('Job payload==', [$data]);
+                    $queueId = explode('/', $queue);
+                    $queueId = array_pop($queueId);
 
-                    $batchIds = array_column($data, 'batchIds');
+                    $count = (array_key_exists($queueId, Config::get('sqs-queue-reader.handlers')))
+                        ? Config::get('sqs-queue-reader.handlers')[$queueId]['count']
+                        : Config::get('sqs-queue-reader.default-handler')['count'];
 
-                    $batchIds = array_chunk($batchIds, 10);
+                    if ($count === 1) {
+                        $event->job->delete();
+                    } else {
+                        $data = $event->job->payload();
+                        Log::debug('Job payload==', [$data]);
 
-                    foreach ($batchIds as $batch) {
-                        //Deletes up to ten messages from the specified queue.
-                        $result = $event->job->deleteMessageBatch([
-                            'Entries' => $batch,
-                            'QueueUrl' => $queue,
-                        ]);
+                        $batchIds = array_column($data, 'batchIds');
+                        Log::debug('Job array_column==', [$data]);
+                        $batchIds = array_chunk($batchIds, 10);
+                        Log::debug('Job array_chunk==', [$data]);
+                        foreach ($batchIds as $batch) {
+                            //Deletes up to ten messages from the specified queue.
+                            $result = $event->job->deleteMessageBatch([
+                                'Entries' => $batch,
+                                'QueueUrl' => $queue,
+                            ]);
 
-                        if (isset($result['Failed'])) {
-                            $msg = '';
-                            foreach ($result['Failed'] as $failed) {
-                                $msg .= sprintf("Deleting message failed, code = %s, id = %s, msg = %s, senderfault = %s", $failed['Code'], $failed['Id'], $failed['Message'], $failed['SenderFault']);
+                            if (isset($result['Failed'])) {
+                                $msg = '';
+                                foreach ($result['Failed'] as $failed) {
+                                    $msg .= sprintf("Deleting message failed, code = %s, id = %s, msg = %s, senderfault = %s", $failed['Code'], $failed['Id'], $failed['Message'], $failed['SenderFault']);
+                                }
+                                Log::error('Cannot delete some SQS messages: ', [$msg]);
+
+                                throw new \RuntimeException("Cannot delete some messages, consult log for more info!");
                             }
-                            Log::error('Cannot delete some SQS messages: ', [$msg]);
-
-                            throw new \RuntimeException("Cannot delete some messages, consult log for more info!");
+                            Log::info('Message remove report:', [$result]);
                         }
-                        Log::info('Message remove report:', [$result]);
                     }
                 }
             });
