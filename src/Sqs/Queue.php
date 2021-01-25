@@ -95,7 +95,7 @@ class Queue extends SqsQueue
                 }
                 Log::debug('New $responseV2==', [$response]);
 
-                return new SqsJob($this->container, $this->sqs, $response, $this->connectionName, $queueId);
+                return new SqsJob($this->container, $this->sqs, $response, $this->connectionName, $queue);
             }
         } catch (AwsException $e) {
             $msg = 'Line: '. $e->getLine() .', '. $e->getFile() . ', '. $e->getMessage();
