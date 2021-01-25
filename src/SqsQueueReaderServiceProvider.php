@@ -35,11 +35,11 @@ class SqsQueueReaderServiceProvider extends ServiceProvider
                         $data = $event->job->payload();
                         Log::debug('Job payload==', [$data]);
 
-                        $batchIds = array_column($data, 'batchIds');
+                        $batchIds = array_column($data['data'], 'batchIds');
                         Log::debug('Job array_column==', [$batchIds]);
                         $batchIds = array_chunk($batchIds, 10);
                         Log::debug('Job array_chunk==', [$batchIds]);
-                        
+
                         foreach ($batchIds as $batch) {
                             //Deletes up to ten messages from the specified queue.
                             $result = $event->job->deleteMessageBatch([
