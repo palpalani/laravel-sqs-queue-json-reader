@@ -2,14 +2,14 @@
 
 namespace palPalani\SqsQueueReader;
 
+use Aws\Exception\AwsException;
+use Aws\Sqs\SqsClient;
 use Illuminate\Queue\Events\JobProcessed;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\ServiceProvider;
 use palPalani\SqsQueueReader\Sqs\Connector;
-use Aws\Sqs\SqsClient;
-use Aws\Exception\AwsException;
 
 class SqsQueueReaderServiceProvider extends ServiceProvider
 {
@@ -45,7 +45,7 @@ class SqsQueueReaderServiceProvider extends ServiceProvider
                         $client = new SqsClient([
                             //'profile' => 'default',
                             'region' => Config::get('queue.connections.sqs-json.region'),
-                            'version' => '2012-11-05'
+                            'version' => '2012-11-05',
                         ]);
 
                         foreach ($batchIds as $batch) {
