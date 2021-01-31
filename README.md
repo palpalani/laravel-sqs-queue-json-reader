@@ -5,9 +5,11 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/palpalani/laravel-sqs-queue-json-reader.svg?style=flat-square)](https://packagist.org/packages/palpalani/laravel-sqs-queue-json-reader)
 
 
-Custom SQS queue reader for Laravel that supports plain JSON payloads. 
+Custom SQS queue reader for Laravel projects that supports raw JSON payloads. 
 Laravel expects SQS messages to be generated in a 
 specific format that includes job handler class and a serialized job.
+
+Note: Implemented tm read multiple messages from queue.
 
 But in certain cases you may want to parse messages from 3rd party 
 applications, custom JSON messages and so on.
@@ -28,18 +30,32 @@ php artisan vendor:publish --provider="palPalani\SqsQueueReader\SqsQueueReaderSe
 This is the contents of the published config file:
 
 ```php
+/**
+ * List of plain SQS queues and their corresponding handling classes
+ */
 return [
 
-    /**
-     * Separate queue handle with corresponding queue name as key.
-     */
+    // Separate queue handler with corresponding queue name as key.
     'handlers' => [
-        //'stripe-webhooks' => App\Jobs\StripeHandler::class,
-        //'mailgun-webhooks' => App\Jobs\MailgunHandler::class,
-        //'shopify-webhooks' => App\Jobs\ShopifyHandler::class,
+        'stripe-webhooks' => [
+            'class' => App\Jobs\StripeHandler::class,
+            'count' => 10,
+        ],
+        'mailgun-webhooks' => [
+            'class' => App\Jobs\MailgunHandler::class,
+            'count' => 100,
+        ]
     ],
 
-    'default-handler' => App\Jobs\SqsHandler::class
+    // If no handlers specified then default handler will be executed.
+    'default-handler' => [
+
+        // Name of the handler class
+        'class' => App\Jobs\SqsHandler::class,
+
+        // Number of messages need to read from SQS.
+        'count' => 1,
+    ]
 ];
 ```
 
@@ -78,14 +94,12 @@ class ExampleController extends Controller
 {
     public function index()
     {
-        // Create a PHP object
-        $object = [
+        // Dispatch job with some data.
+        $job = new DispatcherJob([
             'music' => 'Sample SQS message',
+            'singer' => 'AR. Rahman',
             'time' => time()
-        ];
-
-        // Pass it to dispatcher job
-        $job = new DispatcherJob($object);
+        ]);
 
         // Dispatch the job as you normally would
         // By default, your data will be encapsulated in 'data' and 'job' field will be added
@@ -99,7 +113,7 @@ class ExampleController extends Controller
 Above code will push the following JSON object to SQS queue:
 
 ```json
-{"job":"App\\Jobs\\SqsHandler@handle","data":{"music":"Sample SQS message","time":1464511672}}
+{"job":"App\\Jobs\\SqsHandler@handle","data":{"music":"Sample SQS message","singer":"AR. Rahman","time":1464511672}}
 ```
 
 'job' field is not used, actually. It's just kept for compatibility with Laravel

@@ -13,7 +13,7 @@ return [
         ],
         'mailgun-webhooks' => [
             'class' => App\Jobs\MailgunHandler::class,
-            'count' => 500,
+            'count' => 100,
         ]
     ],
 
