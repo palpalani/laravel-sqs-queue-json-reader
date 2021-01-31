@@ -18,15 +18,15 @@ class Queue extends SqsQueue
     /**
      * Create a payload string from the given job and data.
      *
-     * @param  string  $job
+     * @param  object|string  $job
      * @param  mixed   $data
      * @param  string  $queue
      * @return string
      */
-    protected function createPayload($job, $data = '', $queue = null)
+    protected function createPayload($job, $queue = null, $data = '')
     {
         if (! $job instanceof DispatcherJob) {
-            return parent::createPayload($job, $data, $queue);
+            return parent::createPayload($job, $queue, $data);
         }
 
         $handlerJob = $this->getClass($queue) . '@handle';
@@ -168,7 +168,7 @@ class Queue extends SqsQueue
 
     /**
      * @param string $payload
-     * @param null $queue
+     * @param null|string $queue
      * @param array $options
      * @return mixed|null
      */
