@@ -36,12 +36,9 @@ class SqsQueueReaderServiceProvider extends ServiceProvider
                         $event->job->delete();
                     } else {
                         $data = $event->job->payload();
-                        Log::debug('Job payload==', [$data]);
 
                         $batchIds = array_column($data['data'], 'batchIds');
-                        Log::debug('Job array_column==', [$batchIds]);
                         $batchIds = array_chunk($batchIds, 10);
-                        Log::debug('Job array_chunk==', [$batchIds]);
 
                         $client = new SqsClient([
                             //'profile' => 'default',

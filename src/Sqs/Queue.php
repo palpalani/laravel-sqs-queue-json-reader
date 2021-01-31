@@ -6,7 +6,6 @@ use Aws\Exception\AwsException;
 use Illuminate\Queue\Jobs\SqsJob;
 use Illuminate\Queue\SqsQueue;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use palPalani\SqsQueueReader\Jobs\DispatcherJob;
 
@@ -82,18 +81,15 @@ class Queue extends SqsQueue
             ]);
 
             if (isset($response['Messages']) && count($response['Messages']) > 0) {
-                Log::debug('Messages==', [$response['Messages']]);
                 $class = (array_key_exists($queueId, $this->container['config']->get('sqs-queue-reader.handlers')))
                     ? $this->container['config']->get('sqs-queue-reader.handlers')[$queueId]['class']
                     : $this->container['config']->get('sqs-queue-reader.default-handler')['class'];
 
-                Log::debug('Count, class==', [$count, $class]);
                 if ($count === 1) {
                     $response = $this->modifySinglePayload($response['Messages'][0], $class);
                 } else {
                     $response = $this->modifyMultiplePayload($response['Messages'], $class);
                 }
-                Log::debug('New $responseV2==', [$response]);
 
                 return new SqsJob($this->container, $this->sqs, $response, $this->connectionName, $queue);
             }
@@ -143,8 +139,6 @@ class Queue extends SqsQueue
         $attributes = [];
 
         foreach ($payload as $k => $item) {
-            //Log::debug('Each Messages==', [$item]);
-            //$body[] = json_decode($item['Body'], true);
             $body[$k] = [
                 'messages' => json_decode($item['Body'], true),
                 'attributes' => $item['Attributes'],
