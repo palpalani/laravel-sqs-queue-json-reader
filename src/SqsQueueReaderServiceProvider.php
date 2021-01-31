@@ -44,7 +44,7 @@ class SqsQueueReaderServiceProvider extends ServiceProvider
                             //'profile' => 'default',
                             'region' => Config::get('queue.connections.sqs-json.region'),
                             'version' => '2012-11-05',
-                            'credentials' => Arr::only(Config::get('queue.connections.sqs-json'), ['key', 'secret'])
+                            'credentials' => Arr::only(Config::get('queue.connections.sqs-json'), ['key', 'secret']),
                         ]);
 
                         foreach ($batchIds as $batch) {
