@@ -20,9 +20,9 @@ class Queue extends SqsQueue
     /**
      * Create a payload string from the given job and data.
      *
-     * @param object|string $job
-     * @param mixed $data
+     * @param string $job
      * @param string $queue
+     * @param mixed $data
      * @return string
      * @throws \JsonException
      */
@@ -173,7 +173,7 @@ class Queue extends SqsQueue
 
     /**
      * @param string $payload
-     * @param null|string $queue
+     * @param null $queue
      * @param array $options
      * @return mixed|null
      * @throws \JsonException
@@ -182,7 +182,7 @@ class Queue extends SqsQueue
     {
         $payload = \json_decode($payload, true, 512, JSON_THROW_ON_ERROR);
 
-        if (isset($payload['data']) && isset($payload['job'])) {
+        if (isset($payload['data'], $payload['job'])) {
             $payload = $payload['data'];
         }
 
