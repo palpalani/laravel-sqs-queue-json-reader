@@ -20,7 +20,7 @@ class Queue extends SqsQueue
     /**
      * Create a payload string from the given job and data.
      *
-     * @param string $job
+     * @param object|string $job
      * @param string $queue
      * @param mixed $data
      * @return string
@@ -173,7 +173,7 @@ class Queue extends SqsQueue
 
     /**
      * @param string $payload
-     * @param null $queue
+     * @param null|string $queue
      * @param array $options
      * @return mixed|null
      * @throws \JsonException
