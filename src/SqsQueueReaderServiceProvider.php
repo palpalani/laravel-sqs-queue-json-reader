@@ -71,7 +71,7 @@ class SqsQueueReaderServiceProvider extends ServiceProvider
 
                                     throw new \RuntimeException("Cannot delete some messages, consult log for more info!");
                                 }
-                                Log::info('Message remove report:', [$result]);
+                                //Log::info('Message remove report:', [$result]);
                             } catch (AwsException $e) {
                                 Log::error('AWS SQS client error:', [$e->getMessage()]);
                             }
