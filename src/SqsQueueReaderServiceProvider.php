@@ -21,7 +21,7 @@ class SqsQueueReaderServiceProvider extends ServiceProvider
                 __DIR__ . '/../config/sqs-queue-reader.php' => config_path('sqs-queue-reader.php'),
             ], 'config');
 
-            Queue::after(static function (JobProcessed $event) {
+            Queue::after(function (JobProcessed $event) {
                 if ($event->connectionName === 'sqs-json') {
                     $queue = $event->job->getQueue();
 
@@ -35,47 +35,7 @@ class SqsQueueReaderServiceProvider extends ServiceProvider
                     if ($count === 1) {
                         $event->job->delete();
                     } else {
-                        $data = $event->job->payload();
-
-                        $batchIds = array_column($data['data'], 'batchIds');
-                        $batchIds = array_chunk($batchIds, 10);
-
-                        $client = new SqsClient([
-                            //'profile' => 'default',
-                            'region' => Config::get('queue.connections.sqs-json.region'),
-                            'version' => '2012-11-05',
-                            'credentials' => Arr::only(Config::get('queue.connections.sqs-json'), ['key', 'secret']),
-                        ]);
-
-                        foreach ($batchIds as $batch) {
-                            //Deletes up to ten messages from the specified queue.
-                            /*
-                            $result = $event->job->deleteMessageBatch([
-                                'Entries' => $batch,
-                                'QueueUrl' => $queue,
-                            ]);
-                            */
-
-                            try {
-                                $result = $client->deleteMessageBatch([
-                                    'Entries' => $batch,
-                                    'QueueUrl' => $queue,
-                                ]);
-
-                                if (isset($result['Failed'])) {
-                                    $msg = '';
-                                    foreach ($result['Failed'] as $failed) {
-                                        $msg .= sprintf("Deleting message failed, code = %s, id = %s, msg = %s, senderfault = %s", $failed['Code'], $failed['Id'], $failed['Message'], $failed['SenderFault']);
-                                    }
-                                    Log::error('Cannot delete some SQS messages: ', [$msg]);
-
-                                    throw new \RuntimeException("Cannot delete some messages, consult log for more info!");
-                                }
-                                //Log::info('Message remove report:', [$result]);
-                            } catch (AwsException $e) {
-                                Log::error('AWS SQS client error:', [$e->getMessage()]);
-                            }
-                        }
+                        $this->removeMessages($event->job->payload(), $queue);
                     }
                 }
             });
@@ -91,5 +51,41 @@ class SqsQueueReaderServiceProvider extends ServiceProvider
                 return new Connector();
             });
         });
+    }
+
+    private function removeMessages(array $data, $queue): void
+    {
+        $batchIds = array_column($data['data'], 'batchIds');
+        $batchIds = array_chunk($batchIds, 10);
+
+        $client = new SqsClient([
+            //'profile' => 'default',
+            'region' => Config::get('queue.connections.sqs-json.region'),
+            'version' => '2012-11-05',
+            'credentials' => Arr::only(Config::get('queue.connections.sqs-json'), ['key', 'secret']),
+        ]);
+
+        foreach ($batchIds as $batch) {
+            //Deletes up to ten messages from the specified queue.
+            try {
+                $result = $client->deleteMessageBatch([
+                    'Entries' => $batch,
+                    'QueueUrl' => $queue,
+                ]);
+
+                if (isset($result['Failed'])) {
+                    $msg = '';
+                    foreach ($result['Failed'] as $failed) {
+                        $msg .= sprintf("Deleting message failed, code = %s, id = %s, msg = %s, senderfault = %s", $failed['Code'], $failed['Id'], $failed['Message'], $failed['SenderFault']);
+                    }
+                    Log::error('Cannot delete some SQS messages: ', [$msg]);
+
+                    throw new \RuntimeException("Cannot delete some messages, consult log for more info!");
+                }
+                //Log::info('Message remove report:', [$result]);
+            } catch (AwsException $e) {
+                Log::error('AWS SQS client error:', [$e->getMessage()]);
+            }
+        }
     }
 }
