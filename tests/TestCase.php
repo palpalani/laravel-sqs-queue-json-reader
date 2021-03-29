@@ -21,6 +21,7 @@ class TestCase extends Orchestra
 
     public function getEnvironmentSetUp($app): void
     {
+        /*
         $app['config']->set('database.default', 'sqlite');
         $app['config']->set('database.connections.sqlite', [
             'driver' => 'sqlite',
@@ -28,7 +29,6 @@ class TestCase extends Orchestra
             'prefix' => '',
         ]);
 
-        /*
         include_once __DIR__.'/../database/migrations/create_laravel_sqs_queue_json_reader_table.php.stub';
         (new \CreatePackageTable())->up();
         */
