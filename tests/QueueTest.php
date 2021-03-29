@@ -27,12 +27,12 @@ class QueueTest extends \PHPUnit\Framework\TestCase
             ->getMock();
 
         $method = new \ReflectionMethod(
-            'palPalani\SqsQueueReader\Sqs\Queue',
+            Queue::class,
             'createPayload'
         );
 
         $method->setAccessible(true);
 
-        //$response = $method->invokeArgs($queue, [$job]);
+        $method->invokeArgs($queue, [$job]);
     }
 }
