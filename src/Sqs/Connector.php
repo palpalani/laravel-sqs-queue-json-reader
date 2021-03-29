@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace palPalani\SqsQueueReader\Sqs;
 
 use Aws\Sqs\SqsClient;

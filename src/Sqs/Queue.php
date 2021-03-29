@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace palPalani\SqsQueueReader\Sqs;
 
 use Aws\Exception\AwsException;
@@ -18,12 +20,13 @@ class Queue extends SqsQueue
     /**
      * Create a payload string from the given job and data.
      *
-     * @param  object|string  $job
-     * @param  mixed   $data
-     * @param  string  $queue
+     * @param object|string $job
+     * @param mixed $data
+     * @param string $queue
      * @return string
+     * @throws \JsonException
      */
-    protected function createPayload($job, $queue = null, $data = '')
+    protected function createPayload($job, $queue = null, $data = ''): string
     {
         if (! $job instanceof DispatcherJob) {
             return parent::createPayload($job, $queue, $data);
@@ -31,10 +34,10 @@ class Queue extends SqsQueue
 
         $handlerJob = $this->getClass($queue) . '@handle';
 
-        return $job->isPlain() ? json_encode($job->getPayload()) : json_encode([
+        return $job->isPlain() ? \json_encode($job->getPayload(), JSON_THROW_ON_ERROR) : \json_encode([
             'job' => $handlerJob,
             'data' => $job->getPayload(),
-        ]);
+        ], JSON_THROW_ON_ERROR);
     }
 
     /**
@@ -104,22 +107,23 @@ class Queue extends SqsQueue
      * @param string|array $payload
      * @param string $class
      * @return array
+     * @throws \JsonException
      */
     private function modifySinglePayload($payload, $class)
     {
         if (! is_array($payload)) {
-            $payload = json_decode($payload, true);
+            $payload = \json_decode($payload, true, 512, JSON_THROW_ON_ERROR);
         }
 
-        $body = json_decode($payload['Body'], true);
+        $body = \json_decode($payload['Body'], true, 512, JSON_THROW_ON_ERROR);
 
         $body = [
             'uuid' => (string) Str::uuid(),
             'job' => $class . '@handle',
-            'data' => isset($body['data']) ? $body['data'] : $body,
+            'data' => $body['data'] ?? $body,
         ];
 
-        $payload['Body'] = json_encode($body);
+        $payload['Body'] = \json_encode($body, JSON_THROW_ON_ERROR);
 
         return $payload;
     }
@@ -128,11 +132,12 @@ class Queue extends SqsQueue
      * @param string|array $payload
      * @param string $class
      * @return array
+     * @throws \JsonException
      */
     private function modifyMultiplePayload($payload, $class)
     {
         if (! is_array($payload)) {
-            $payload = json_decode($payload, true);
+            $payload = \json_decode($payload, true, 512, JSON_THROW_ON_ERROR);
         }
 
         $body = [];
@@ -140,7 +145,7 @@ class Queue extends SqsQueue
 
         foreach ($payload as $k => $item) {
             $body[$k] = [
-                'messages' => json_decode($item['Body'], true),
+                'messages' => \json_decode($item['Body'], true, 512, JSON_THROW_ON_ERROR),
                 'attributes' => $item['Attributes'],
                 'batchIds' => [
                     'Id' => $item['MessageId'],
@@ -161,7 +166,7 @@ class Queue extends SqsQueue
         return [
             'MessageId' => $messageId,
             'ReceiptHandle' => $receiptHandle,
-            'Body' => json_encode($body),
+            'Body' => \json_encode($body, JSON_THROW_ON_ERROR),
             'Attributes' => $attributes,
         ];
     }
@@ -171,15 +176,16 @@ class Queue extends SqsQueue
      * @param null|string $queue
      * @param array $options
      * @return mixed|null
+     * @throws \JsonException
      */
     public function pushRaw($payload, $queue = null, array $options = [])
     {
-        $payload = json_decode($payload, true);
+        $payload = \json_decode($payload, true, 512, JSON_THROW_ON_ERROR);
 
         if (isset($payload['data']) && isset($payload['job'])) {
             $payload = $payload['data'];
         }
 
-        return parent::pushRaw(json_encode($payload), $queue, $options);
+        return parent::pushRaw(\json_encode($payload, JSON_THROW_ON_ERROR), $queue, $options);
     }
 }
