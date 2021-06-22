@@ -111,7 +111,7 @@ class Queue extends SqsQueue
      * @return array|string
      * @throws JsonException
      */
-    private function modifySinglePayload(array|string $payload, string $class): array|string
+    private function modifySinglePayload(array | string $payload, string $class): array | string
     {
         if (! is_array($payload)) {
             $payload = \json_decode($payload, true, 512, JSON_THROW_ON_ERROR);
@@ -136,7 +136,7 @@ class Queue extends SqsQueue
      * @return array
      * @throws JsonException
      */
-    private function modifyMultiplePayload(array|string $payload, string $class): array
+    private function modifyMultiplePayload(array | string $payload, string $class): array
     {
         if (! is_array($payload)) {
             $payload = \json_decode($payload, true, 512, JSON_THROW_ON_ERROR);
