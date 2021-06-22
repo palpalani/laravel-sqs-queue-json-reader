@@ -9,6 +9,7 @@ use Illuminate\Queue\Jobs\SqsJob;
 use Illuminate\Queue\SqsQueue;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
+use JsonException;
 use palPalani\SqsQueueReader\Jobs\DispatcherJob;
 
 /**
@@ -24,7 +25,7 @@ class Queue extends SqsQueue
      * @param string $queue
      * @param mixed $data
      * @return string
-     * @throws \JsonException
+     * @throws JsonException
      */
     protected function createPayload($job, $queue = null, $data = ''): string
     {
@@ -104,12 +105,12 @@ class Queue extends SqsQueue
     }
 
     /**
-     * @param string|array $payload
+     * @param array|string $payload
      * @param string $class
-     * @return array
-     * @throws \JsonException
+     * @return array|string
+     * @throws JsonException
      */
-    private function modifySinglePayload($payload, $class)
+    private function modifySinglePayload(array|string $payload, string $class): array|string
     {
         if (! is_array($payload)) {
             $payload = \json_decode($payload, true, 512, JSON_THROW_ON_ERROR);
@@ -129,12 +130,12 @@ class Queue extends SqsQueue
     }
 
     /**
-     * @param string|array $payload
+     * @param array|string $payload
      * @param string $class
      * @return array
-     * @throws \JsonException
+     * @throws JsonException
      */
-    private function modifyMultiplePayload($payload, $class)
+    private function modifyMultiplePayload(array|string $payload, string $class): array
     {
         if (! is_array($payload)) {
             $payload = \json_decode($payload, true, 512, JSON_THROW_ON_ERROR);
@@ -142,6 +143,8 @@ class Queue extends SqsQueue
 
         $body = [];
         $attributes = [];
+        $messageId = null;
+        $receiptHandle = null;
 
         foreach ($payload as $k => $item) {
             $body[$k] = [
@@ -173,12 +176,12 @@ class Queue extends SqsQueue
 
     /**
      * @param string $payload
-     * @param null|string $queue
+     * @param null $queue
      * @param array $options
-     * @return mixed|null
-     * @throws \JsonException
+     * @return mixed
+     * @throws JsonException
      */
-    public function pushRaw($payload, $queue = null, array $options = [])
+    public function pushRaw($payload, $queue = null, array $options = []): mixed
     {
         $payload = \json_decode($payload, true, 512, JSON_THROW_ON_ERROR);
 
