@@ -62,8 +62,9 @@ class Queue extends SqsQueue
     /**
      * Pop the next job off of the queue.
      *
-     * @param  string  $queue
+     * @param string $queue
      * @return \Illuminate\Contracts\Queue\Job|null
+     * @throws JsonException
      */
     public function pop($queue = null)
     {
@@ -176,7 +177,7 @@ class Queue extends SqsQueue
 
     /**
      * @param string $payload
-     * @param null $queue
+     * @param string|null $queue
      * @param array $options
      * @return mixed
      * @throws JsonException
