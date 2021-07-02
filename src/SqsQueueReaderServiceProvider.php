@@ -22,7 +22,7 @@ class SqsQueueReaderServiceProvider extends ServiceProvider
             ], 'config');
 
             Queue::after(function (JobProcessed $event) {
-                if ($event->connectionName === 'sqs-json') {
+                if ($event->connectionName === 'sqs-json' || $event->connectionName === 'sqs-mailgun' || $event->connectionName === 'sqs-priority-json') {
                     $queue = $event->job->getQueue();
 
                     $queueId = explode('/', $queue);
