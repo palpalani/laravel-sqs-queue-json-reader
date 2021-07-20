@@ -13,23 +13,10 @@ class DispatcherJob implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
-    /**
-     * @var mixed
-     */
-    protected $data;
+    protected bool $plain = false;
 
-    /**
-     * @var bool
-     */
-    protected $plain = false;
-
-    /**
-     * DispatchedJob constructor.
-     * @param $data
-     */
-    public function __construct($data)
+    public function __construct(protected $data)
     {
-        $this->data = $data;
     }
 
     /**
@@ -51,7 +38,7 @@ class DispatcherJob implements ShouldQueue
      * @param bool $plain
      * @return $this
      */
-    public function setPlain($plain = true)
+    public function setPlain(bool $plain = true): self
     {
         $this->plain = $plain;
 
@@ -61,7 +48,7 @@ class DispatcherJob implements ShouldQueue
     /**
      * @return bool
      */
-    public function isPlain()
+    public function isPlain(): bool
     {
         return $this->plain;
     }
