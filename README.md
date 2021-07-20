@@ -1,8 +1,8 @@
 # Custom SQS queue reader for Laravel
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/palpalani/laravel-sqs-queue-json-reader.svg?style=flat-square)](https://packagist.org/packages/palpalani/laravel-sqs-queue-json-reader)
-[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/palpalani/laravel-sqs-queue-json-reader/run-tests?label=tests)](https://github.com/palpalani/laravel-sqs-queue-json-reader/actions?query=workflow%3ATests+branch%3Amaster)
-[![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/palpalani/laravel-sqs-queue-json-reader/Check%20&%20fix%20styling?label=code%20style)](https://github.com/palpalani/laravel-sqs-queue-json-reader/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amaster)
+[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/palpalani/laravel-sqs-queue-json-reader/run-tests?label=tests)](https://github.com/palpalani/laravel-sqs-queue-json-reader/actions?query=workflow%3ATests+branch%3Amain)
+[![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/palpalani/laravel-sqs-queue-json-reader/Check%20&%20fix%20styling?label=code%20style)](https://github.com/palpalani/laravel-sqs-queue-json-reader/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/palpalani/laravel-sqs-queue-json-reader.svg?style=flat-square)](https://packagist.org/packages/palpalani/laravel-sqs-queue-json-reader)
 
 
@@ -10,7 +10,7 @@ Custom SQS queue reader for Laravel projects that supports raw JSON payloads.
 Laravel expects SQS messages to be generated in a 
 specific format that includes job handler class and a serialized job.
 
-Note: Implemented tm read multiple messages from queue.
+Note: Implemented to read multiple messages from queue.
 
 But in certain cases you may want to parse messages from 3rd party 
 applications, custom JSON messages and so on.
@@ -60,7 +60,7 @@ return [
 ];
 ```
 
-If queue is not found in 'handlers' array, SQS payload is passed to default handler.
+If the queue is not found in 'handlers' array, SQS payload is passed to default handler.
 
 Add `sqs-json` connection to your config/queue.php, Ex:
 
