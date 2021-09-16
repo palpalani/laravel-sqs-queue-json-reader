@@ -8,6 +8,7 @@ use Aws\Exception\AwsException;
 use Illuminate\Queue\Jobs\SqsJob;
 use Illuminate\Queue\SqsQueue;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use JsonException;
 use palPalani\SqsQueueReader\Jobs\DispatcherJob;
@@ -119,13 +120,11 @@ class Queue extends SqsQueue
 
         $body = \json_decode($payload['Body'], true, 512, JSON_THROW_ON_ERROR);
 
-        $body = [
+        $payload['Body'] = \json_encode([
             'uuid' => (string) Str::uuid(),
             'job' => $class . '@handle',
             'data' => $body['data'] ?? $body,
-        ];
-
-        $payload['Body'] = \json_encode($body, JSON_THROW_ON_ERROR);
+        ], JSON_THROW_ON_ERROR);
 
         return $payload;
     }
@@ -148,29 +147,33 @@ class Queue extends SqsQueue
         $receiptHandle = null;
 
         foreach ($payload as $k => $item) {
-            $body[$k] = [
-                'messages' => \json_decode($item['Body'], true, 512, JSON_THROW_ON_ERROR),
-                'attributes' => $item['Attributes'],
-                'batchIds' => [
-                    'Id' => $item['MessageId'],
-                    'ReceiptHandle' => $item['ReceiptHandle'],
-                ],
-            ];
-            $attributes = $item['Attributes'];
-            $messageId = $item['MessageId'];
-            $receiptHandle = $item['ReceiptHandle'];
-        }
+            try {
+                $body[$k] = [
+                    'messages' => \json_decode($item['Body'], true, 512, JSON_THROW_ON_ERROR),
+                    'attributes' => $item['Attributes'],
+                    'batchIds' => [
+                        'Id' => $item['MessageId'],
+                        'ReceiptHandle' => $item['ReceiptHandle'],
+                    ],
+                ];
+                $attributes = $item['Attributes'];
+                $messageId = $item['MessageId'];
+                $receiptHandle = $item['ReceiptHandle'];
+            } catch (JsonException $e) {
+                Log::warning('Invalid payload!', [$item]);
 
-        $body = [
-            'uuid' => (string) Str::uuid(),
-            'job' => $class . '@handle',
-            'data' => $body,
-        ];
+                continue;
+            }
+        }
 
         return [
             'MessageId' => $messageId,
             'ReceiptHandle' => $receiptHandle,
-            'Body' => \json_encode($body, JSON_THROW_ON_ERROR),
+            'Body' => \json_encode([
+                'uuid' => (string) Str::uuid(),
+                'job' => $class . '@handle',
+                'data' => $body,
+            ], JSON_THROW_ON_ERROR),
             'Attributes' => $attributes,
         ];
     }
