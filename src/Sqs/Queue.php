@@ -48,7 +48,7 @@ class Queue extends SqsQueue
     private function getClass($queue = null): string
     {
         if (! $queue) {
-            return Config::get('sqs-queue-reader.default-handler');
+            return Config::get('sqs-queue-reader.default-handler')['class'];
         }
 
         $queueId = explode('/', $queue);
