@@ -3,6 +3,10 @@
     "description": "Custom SQS queue reader for Laravel",
     "keywords": [
         "palpalani",
+        "sqs-reader",
+        "sqs-json",
+        "plain-message",
+        "bulk-message",
         "laravel-sqs-queue-json-reader"
     ],
     "homepage": "https://github.com/palpalani/laravel-sqs-queue-json-reader",
@@ -25,7 +29,8 @@
     },
     "require-dev": {
         "orchestra/testbench": "^6.9",
-        "phpunit/phpunit": "~9.3",
+        "phpunit/phpunit": "^9.3",
+        "psalm/plugin-laravel": "^1.5",
         "vimeo/psalm": "^4.4"
     },
     "autoload": {

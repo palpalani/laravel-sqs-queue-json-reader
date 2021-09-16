@@ -14,7 +14,7 @@ class QueueTest extends TestCase
     /**
      * @test
      */
-    public function class_named_is_derived_from_queue_name()
+    public function class_named_is_derived_from_queue_name(): void
     {
         $content = [
             'test' => 'test',
