@@ -8,7 +8,6 @@ use Aws\Exception\AwsException;
 use Illuminate\Queue\Jobs\SqsJob;
 use Illuminate\Queue\SqsQueue;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use JsonException;
 use palPalani\SqsQueueReader\Jobs\DispatcherJob;
@@ -148,22 +147,22 @@ class Queue extends SqsQueue
 
         foreach ($payload as $k => $item) {
             try {
-                $body[$k] = [
-                    'messages' => \json_decode($item['Body'], true, 512, JSON_THROW_ON_ERROR),
-                    'attributes' => $item['Attributes'],
-                    'batchIds' => [
-                        'Id' => $item['MessageId'],
-                        'ReceiptHandle' => $item['ReceiptHandle'],
-                    ],
-                ];
-                $attributes = $item['Attributes'];
-                $messageId = $item['MessageId'];
-                $receiptHandle = $item['ReceiptHandle'];
+                $message = \json_decode($item['Body'], true, 512, JSON_THROW_ON_ERROR);
             } catch (JsonException $e) {
-                Log::warning('Invalid payload!', [$item]);
-
-                continue;
+                $message = [];
             }
+
+            $body[$k] = [
+                'messages' => $message,
+                'attributes' => $item['Attributes'],
+                'batchIds' => [
+                    'Id' => $item['MessageId'],
+                    'ReceiptHandle' => $item['ReceiptHandle'],
+                ],
+            ];
+            $attributes = $item['Attributes'];
+            $messageId = $item['MessageId'];
+            $receiptHandle = $item['ReceiptHandle'];
         }
 
         return [
