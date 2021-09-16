@@ -9,7 +9,7 @@ use palPalani\SqsQueueReader\Sqs\Queue;
  * Class QueueTest
  * @package palPalani\SqsQueueReader\Tests
  */
-class QueueTest extends \PHPUnit\Framework\TestCase
+class QueueTest extends TestCase
 {
     /**
      * @test
