@@ -1,10 +1,11 @@
 version: 2
 updates:
-  - package-ecosystem: composer
+  - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: daily
-    open-pull-requests-limit: 10
+      interval: "weekly"
+    labels:
+      - "dependencies"
   
   # Maintain dependencies for Composer.
   - package-ecosystem: composer
