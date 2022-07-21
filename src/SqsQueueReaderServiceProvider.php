@@ -63,6 +63,10 @@ class SqsQueueReaderServiceProvider extends ServiceProvider
             'region' => Config::get('queue.connections.sqs-json.region'),
             'version' => '2012-11-05',
             'credentials' => Arr::only(Config::get('queue.connections.sqs-json'), ['key', 'secret']),
+            'http' => [
+                'timeout' => 30,
+                'connect_timeout' => 30,
+            ],
         ]);
 
         foreach ($batchIds as $batch) {
