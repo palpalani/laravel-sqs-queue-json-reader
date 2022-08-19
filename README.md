@@ -193,6 +193,16 @@ Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed re
 
 Please see [CONTRIBUTING](.github/CONTRIBUTING.md) for details.
 
+## Other Laravel packages
+
+[GrumPHP rector task](https://github.com/palpalani/grumphp-rector-task) GrumPHP with a task that runs RectorPHP for your Laravel projects.
+[Email Deny List (blacklist) Check - IP Deny List (blacklist) Check](https://github.com/palpalani/laravel-dns-deny-list-check) Deny list (blacklist) checker will test a mail server IP address against over 50 DNS based email blacklists. (Commonly called Realtime blacklist, DNSBL or RBL).
+[Spamassassin spam score of emails](https://github.com/palpalani/laravel-spamassassin-score) Checks the spam score of email contents using spamassassin database.
+[Laravel Login Notifications](https://github.com/palpalani/laravel-login-notifications) A login event notification for Laravel projects. By default, it will send notification only on production environment only.
+[Laravel Toastr](https://github.com/palpalani/laravel-toastr) Implements toastr.js for Laravel. Toastr.js is a Javascript library for non-blocking notifications.
+[Beast](https://github.com/palpalani/beast) Beast is Screenshot as a Service using Nodejs, Chrome and Aws Lamda. Convert a webpage to an image using headless Chrome Takes screenshot of any given URL/Html content and returns base64 encoded buffer.
+[eCommerce Product Recommendations](https://github.com/palpalani/eCommerce-Product-Recommendations) Analyse order history of customers and recommend products for new customers which enables higher sales volume.
+
 ## Security Vulnerabilities
 
 Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
