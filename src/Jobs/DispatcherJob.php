@@ -35,7 +35,7 @@ class DispatcherJob implements ShouldQueue
     }
 
     /**
-     * @param bool $plain
+     * @param  bool  $plain
      * @return $this
      */
     public function setPlain(bool $plain = true): self

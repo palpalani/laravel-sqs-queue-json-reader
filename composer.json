@@ -5,8 +5,10 @@
         "palpalani",
         "sqs-reader",
         "sqs-json",
-        "plain-message",
-        "bulk-message",
+        "sqs-text-reader",
+        "sqs-plain-message",
+        "sqs-bulk-message",
+        "laravel-sqs",
         "laravel-sqs-queue-json-reader"
     ],
     "homepage": "https://github.com/palpalani/laravel-sqs-queue-json-reader",
@@ -15,7 +17,7 @@
         {
             "name": "palPalani",
             "email": "palani.p@gmail.com",
-            "homepage": "https://southdreamz.com",
+            "homepage": "https://github.com/palpalani",
             "role": "Developer"
         }
     ],
@@ -28,10 +30,13 @@
         "aws/aws-sdk-php": "^3.0"
     },
     "require-dev": {
+        "laravel/pint": "^1.1",
+        "nunomaduro/collision": "^6.2",
+        "nunomaduro/larastan": "^2.1",
         "orchestra/testbench": "^6.9|^7.0",
-        "phpunit/phpunit": "^9.3",
-        "psalm/plugin-laravel": "^2.0",
-        "vimeo/psalm": "^4.4"
+        "phpstan/extension-installer": "^1.1",
+        "phpstan/phpstan-deprecation-rules": "^1.0",
+        "phpunit/phpunit": "^9.3"
     },
     "autoload": {
         "psr-4": {
@@ -44,12 +49,16 @@
         }
     },
     "scripts": {
-        "psalm": "vendor/bin/psalm",
+        "analyse": "vendor/bin/phpstan analyse",
         "test": "./vendor/bin/testbench package:test --parallel --no-coverage",
-        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage",
+        "format": "vendor/bin/pint"
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "phpstan/extension-installer": true
+        }
     },
     "extra": {
         "laravel": {

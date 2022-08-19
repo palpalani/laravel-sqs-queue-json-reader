@@ -6,14 +6,13 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/palpalani/laravel-sqs-queue-json-reader.svg?style=flat-square)](https://packagist.org/packages/palpalani/laravel-sqs-queue-json-reader)
 
 
-Custom SQS queue reader for Laravel projects that supports raw JSON payloads. 
-Laravel expects SQS messages to be generated in a 
+Custom SQS queue reader for Laravel projects that supports raw JSON payloads and reads multiple messages. Laravel expects SQS messages to be generated in a 
 specific format that includes job handler class and a serialized job.
 
 Note: Implemented to read multiple messages from queue.
 
-But in certain cases you may want to parse messages from 3rd party 
-applications, custom JSON messages and so on.
+This library is very useful when you want to parse messages from 3rd party 
+applications such as stripe webhooks, shopify webhooks, mailgun web hooks, custom JSON messages and so on.
 
 ## Installation
 
@@ -44,7 +43,7 @@ return [
         ],
         'mailgun-webhooks' => [
             'class' => App\Jobs\MailgunHandler::class,
-            'count' => 100,
+            'count' => 10,
         ]
     ],
 
@@ -71,8 +70,8 @@ Add `sqs-json` connection to your config/queue.php, Ex:
             'driver' => 'sqs-json',
             'key'    => env('AWS_ACCESS_KEY_ID', ''),
             'secret' => env('AWS_SECRET_ACCESS_KEY', ''),
-            'prefix' => env('SQS_PREFIX', 'https://sqs.us-west-2.amazonaws.com/1234567890'),
-            'queue'  => env('SQS_QUEUE', 'stripe-webhooks'),
+            'prefix' => env('AWS_SQS_PREFIX', 'https://sqs.us-west-2.amazonaws.com/1234567890'),
+            'queue'  => env('AWS_SQS_QUEUE', 'external-webhooks'),
             'region' => env('AWS_DEFAULT_REGION', 'us-west-2'),
         ],
     ]
@@ -97,7 +96,7 @@ class ExampleController extends Controller
     {
         // Dispatch job with some data.
         $job = new DispatcherJob([
-            'music' => 'Sample SQS message',
+            'music' => 'Ponni nathi from PS-1',
             'singer' => 'AR. Rahman',
             'time' => time()
         ]);
@@ -119,6 +118,31 @@ Above code will push the following JSON object to SQS queue:
 
 'job' field is not used, actually. It's just kept for compatibility with Laravel
 Framework.
+
+### Processing job
+
+Run the following commnd for testing the dispatched job.
+
+`php artisan queue:work sqs-json`
+
+For production, use supervisor with the following configuration.
+
+```
+[program:sqs-json-reader]
+process_name=%(program_name)s_%(process_num)02d
+command=php /var/html/app/artisan queue:work sqs-json --sleep=30 --timeout=50 --tries=2 --memory=128 --daemon
+directory=/var/html/app
+autostart=true
+autorestart=true
+startretries=10
+user=root
+numprocs=1
+redirect_stderr=true
+stdout_logfile=/var/html/app/horizon.log
+stderr_logfile=/tmp/horizon-error.log
+stopwaitsecs=3600
+priority=1000
+```
 
 ### Receiving from SQS
 
@@ -151,7 +175,11 @@ class SqsHandlerJob extends Job
 }
 ```
 
+For more information about AWS SQS check [offical docs](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-configure-queue-parameters.html).
+
 ## Testing
+
+We already configured the script, just run the command:
 
 ```bash
 composer test
@@ -164,6 +192,16 @@ Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed re
 ## Contributing
 
 Please see [CONTRIBUTING](.github/CONTRIBUTING.md) for details.
+
+## Other Laravel packages
+
+[GrumPHP rector task](https://github.com/palpalani/grumphp-rector-task) GrumPHP with a task that runs RectorPHP for your Laravel projects.
+[Email Deny List (blacklist) Check - IP Deny List (blacklist) Check](https://github.com/palpalani/laravel-dns-deny-list-check) Deny list (blacklist) checker will test a mail server IP address against over 50 DNS based email blacklists. (Commonly called Realtime blacklist, DNSBL or RBL).
+[Spamassassin spam score of emails](https://github.com/palpalani/laravel-spamassassin-score) Checks the spam score of email contents using spamassassin database.
+[Laravel Login Notifications](https://github.com/palpalani/laravel-login-notifications) A login event notification for Laravel projects. By default, it will send notification only on production environment only.
+[Laravel Toastr](https://github.com/palpalani/laravel-toastr) Implements toastr.js for Laravel. Toastr.js is a Javascript library for non-blocking notifications.
+[Beast](https://github.com/palpalani/beast) Beast is Screenshot as a Service using Nodejs, Chrome and Aws Lamda. Convert a webpage to an image using headless Chrome Takes screenshot of any given URL/Html content and returns base64 encoded buffer.
+[eCommerce Product Recommendations](https://github.com/palpalani/eCommerce-Product-Recommendations) Analyse order history of customers and recommend products for new customers which enables higher sales volume.
 
 ## Security Vulnerabilities
 
