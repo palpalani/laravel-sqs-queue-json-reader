@@ -6,14 +6,13 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/palpalani/laravel-sqs-queue-json-reader.svg?style=flat-square)](https://packagist.org/packages/palpalani/laravel-sqs-queue-json-reader)
 
 
-Custom SQS queue reader for Laravel projects that supports raw JSON payloads and reads multiple messages. 
-Laravel expects SQS messages to be generated in a 
+Custom SQS queue reader for Laravel projects that supports raw JSON payloads and reads multiple messages. Laravel expects SQS messages to be generated in a 
 specific format that includes job handler class and a serialized job.
 
 Note: Implemented to read multiple messages from queue.
 
-But in certain cases you may want to parse messages from 3rd party 
-applications, custom JSON messages and so on.
+This library is very useful when you want to parse messages from 3rd party 
+applications such as stripe webhooks, shopify webhooks, mailgun web hooks, custom JSON messages and so on.
 
 ## Installation
 
@@ -44,7 +43,7 @@ return [
         ],
         'mailgun-webhooks' => [
             'class' => App\Jobs\MailgunHandler::class,
-            'count' => 100,
+            'count' => 10,
         ]
     ],
 
@@ -71,8 +70,8 @@ Add `sqs-json` connection to your config/queue.php, Ex:
             'driver' => 'sqs-json',
             'key'    => env('AWS_ACCESS_KEY_ID', ''),
             'secret' => env('AWS_SECRET_ACCESS_KEY', ''),
-            'prefix' => env('SQS_PREFIX', 'https://sqs.us-west-2.amazonaws.com/1234567890'),
-            'queue'  => env('SQS_QUEUE', 'stripe-webhooks'),
+            'prefix' => env('AWS_SQS_PREFIX', 'https://sqs.us-west-2.amazonaws.com/1234567890'),
+            'queue'  => env('AWS_SQS_QUEUE', 'external-webhooks'),
             'region' => env('AWS_DEFAULT_REGION', 'us-west-2'),
         ],
     ]
@@ -97,7 +96,7 @@ class ExampleController extends Controller
     {
         // Dispatch job with some data.
         $job = new DispatcherJob([
-            'music' => 'Sample SQS message',
+            'music' => 'Ponni nathi from PS-1',
             'singer' => 'AR. Rahman',
             'time' => time()
         ]);
@@ -130,17 +129,16 @@ For production, use supervisor with the following configuration.
 
 ```
 [program:sqs-json-reader]
-;process_name=%(program_name)s
 process_name=%(program_name)s_%(process_num)02d
-command=php /srv/app/artisan queue:work sqs-json --sleep=20 --timeout=50 --tries=2 --memory=128 --daemon
-directory=/srv/app
+command=php /var/html/app/artisan queue:work sqs-json --sleep=30 --timeout=50 --tries=2 --memory=128 --daemon
+directory=/var/html/app
 autostart=true
 autorestart=true
 startretries=10
 user=root
 numprocs=1
 redirect_stderr=true
-stdout_logfile=/srv/app/horizon.log
+stdout_logfile=/var/html/app/horizon.log
 stderr_logfile=/tmp/horizon-error.log
 stopwaitsecs=3600
 priority=1000
@@ -177,7 +175,11 @@ class SqsHandlerJob extends Job
 }
 ```
 
+For more information about AWS SQS check [offical docs](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-configure-queue-parameters.html).
+
 ## Testing
+
+We already configured the script, just run the command:
 
 ```bash
 composer test
