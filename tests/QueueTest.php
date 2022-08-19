@@ -7,7 +7,6 @@ use palPalani\SqsQueueReader\Sqs\Queue;
 
 /**
  * Class QueueTest
- * @package palPalani\SqsQueueReader\Tests
  */
 class QueueTest extends TestCase
 {

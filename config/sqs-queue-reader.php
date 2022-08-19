@@ -14,7 +14,7 @@ return [
         'mailgun-webhooks' => [
             'class' => App\Jobs\MailgunHandler::class,
             'count' => 100,
-        ]
+        ],
     ],
 
     // If no handlers specified then default handler will be executed.
@@ -25,5 +25,5 @@ return [
 
         // Number of messages need to read from SQS.
         'count' => 1,
-    ]
+    ],
 ];

@@ -14,17 +14,17 @@ use palPalani\SqsQueueReader\Jobs\DispatcherJob;
 
 /**
  * Class CustomSqsQueue
- * @package App\Services
  */
 class Queue extends SqsQueue
 {
     /**
      * Create a payload string from the given job and data.
      *
-     * @param object|string $job
-     * @param string $queue
-     * @param mixed $data
+     * @param  object|string  $job
+     * @param  string  $queue
+     * @param  mixed  $data
      * @return string
+     *
      * @throws JsonException
      */
     protected function createPayload($job, $queue = null, $data = ''): string
@@ -33,7 +33,7 @@ class Queue extends SqsQueue
             return parent::createPayload($job, $queue, $data);
         }
 
-        $handlerJob = $this->getClass($queue) . '@handle';
+        $handlerJob = $this->getClass($queue).'@handle';
 
         return $job->isPlain() ? \json_encode($job->getPayload(), JSON_THROW_ON_ERROR) : \json_encode([
             'job' => $handlerJob,
@@ -62,8 +62,9 @@ class Queue extends SqsQueue
     /**
      * Pop the next job off of the queue.
      *
-     * @param string $queue
+     * @param  string  $queue
      * @return \Illuminate\Contracts\Queue\Job|null
+     *
      * @throws JsonException
      */
     public function pop($queue = null)
@@ -99,16 +100,17 @@ class Queue extends SqsQueue
                 return new SqsJob($this->container, $this->sqs, $response, $this->connectionName, $queue);
             }
         } catch (AwsException $e) {
-            $msg = 'Line: '. $e->getLine() .', '. $e->getFile() . ', '. $e->getMessage();
+            $msg = 'Line: '.$e->getLine().', '.$e->getFile().', '.$e->getMessage();
 
-            throw new \RuntimeException("Aws SQS error: " . $msg);
+            throw new \RuntimeException('Aws SQS error: '.$msg);
         }
     }
 
     /**
-     * @param array|string $payload
-     * @param string $class
+     * @param  array|string  $payload
+     * @param  string  $class
      * @return array|string
+     *
      * @throws JsonException
      */
     private function modifySinglePayload(array | string $payload, string $class): array | string
@@ -121,7 +123,7 @@ class Queue extends SqsQueue
 
         $payload['Body'] = \json_encode([
             'uuid' => (string) Str::uuid(),
-            'job' => $class . '@handle',
+            'job' => $class.'@handle',
             'data' => $body['data'] ?? $body,
         ], JSON_THROW_ON_ERROR);
 
@@ -129,9 +131,10 @@ class Queue extends SqsQueue
     }
 
     /**
-     * @param array|string $payload
-     * @param string $class
+     * @param  array|string  $payload
+     * @param  string  $class
      * @return array
+     *
      * @throws JsonException
      */
     private function modifyMultiplePayload(array | string $payload, string $class): array
@@ -170,7 +173,7 @@ class Queue extends SqsQueue
             'ReceiptHandle' => $receiptHandle,
             'Body' => \json_encode([
                 'uuid' => (string) Str::uuid(),
-                'job' => $class . '@handle',
+                'job' => $class.'@handle',
                 'data' => $body,
             ], JSON_THROW_ON_ERROR),
             'Attributes' => $attributes,
@@ -178,10 +181,11 @@ class Queue extends SqsQueue
     }
 
     /**
-     * @param string $payload
-     * @param string|null $queue
-     * @param array $options
+     * @param  string  $payload
+     * @param  string|null  $queue
+     * @param  array  $options
      * @return mixed
+     *
      * @throws JsonException
      */
     public function pushRaw($payload, $queue = null, array $options = []): mixed

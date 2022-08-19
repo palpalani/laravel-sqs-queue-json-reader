@@ -5,8 +5,10 @@
         "palpalani",
         "sqs-reader",
         "sqs-json",
-        "plain-message",
-        "bulk-message",
+        "sqs-text-reader",
+        "sqs-plain-message",
+        "sqs-bulk-message",
+        "laravel-sqs",
         "laravel-sqs-queue-json-reader"
     ],
     "homepage": "https://github.com/palpalani/laravel-sqs-queue-json-reader",
@@ -15,7 +17,7 @@
         {
             "name": "palPalani",
             "email": "palani.p@gmail.com",
-            "homepage": "https://southdreamz.com",
+            "homepage": "https://github.com/palpalani",
             "role": "Developer"
         }
     ],
@@ -28,6 +30,7 @@
         "aws/aws-sdk-php": "^3.0"
     },
     "require-dev": {
+        "laravel/pint": "^1.1",
         "orchestra/testbench": "^6.9|^7.0",
         "phpunit/phpunit": "^9.3",
         "psalm/plugin-laravel": "^2.0",
@@ -46,7 +49,8 @@
     "scripts": {
         "psalm": "vendor/bin/psalm",
         "test": "./vendor/bin/testbench package:test --parallel --no-coverage",
-        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage",
+        "format": "vendor/bin/pint"
     },
     "config": {
         "sort-packages": true
