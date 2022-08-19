@@ -6,7 +6,7 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/palpalani/laravel-sqs-queue-json-reader.svg?style=flat-square)](https://packagist.org/packages/palpalani/laravel-sqs-queue-json-reader)
 
 
-Custom SQS queue reader for Laravel projects that supports raw JSON payloads. 
+Custom SQS queue reader for Laravel projects that supports raw JSON payloads and reads multiple messages. 
 Laravel expects SQS messages to be generated in a 
 specific format that includes job handler class and a serialized job.
 
@@ -119,6 +119,32 @@ Above code will push the following JSON object to SQS queue:
 
 'job' field is not used, actually. It's just kept for compatibility with Laravel
 Framework.
+
+### Processing job
+
+Run the following commnd for testing the dispatched job.
+
+`php artisan queue:work sqs-json`
+
+For production, use supervisor with the following configuration.
+
+```
+[program:sqs-json-reader]
+;process_name=%(program_name)s
+process_name=%(program_name)s_%(process_num)02d
+command=php /srv/app/artisan queue:work sqs-json --sleep=20 --timeout=50 --tries=2 --memory=128 --daemon
+directory=/srv/app
+autostart=true
+autorestart=true
+startretries=10
+user=root
+numprocs=1
+redirect_stderr=true
+stdout_logfile=/srv/app/horizon.log
+stderr_logfile=/tmp/horizon-error.log
+stopwaitsecs=3600
+priority=1000
+```
 
 ### Receiving from SQS
 
