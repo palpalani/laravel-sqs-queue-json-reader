@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace palPalani\SqsQueueReader;
 
 use Aws\Exception\AwsException;
@@ -48,7 +50,7 @@ class SqsQueueReaderServiceProvider extends ServiceProvider
 
         $this->app->booted(function () {
             $this->app['queue']->extend('sqs-json', static function () {
-                return new Connector();
+                return new Connector;
             });
         });
     }

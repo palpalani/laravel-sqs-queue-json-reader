@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * List of plain SQS queues and their corresponding handling classes
  */
