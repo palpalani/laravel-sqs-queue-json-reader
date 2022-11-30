@@ -24,9 +24,8 @@ class SqsQueueReaderServiceProvider extends ServiceProvider
             ], 'config');
 
             Queue::after(function (JobProcessed $event) {
-                $queueNames = Config::get('sqs-queue-reader.handlers');
-                $queueNames = array_keys($queueNames);
-                if (in_array($event->connectionName, $queueNames, true)) {
+                $connections = Config::get('queue.connections');
+                if (in_array($event->connectionName, array_keys($connections), true)) {
                     //if ($event->connectionName === 'sqs-json' || $event->connectionName === 'sqs-mailgun' || $event->connectionName === 'sqs-external-customer-webhook' || $event->connectionName === 'sqs-priority-json') {
                     $queue = $event->job->getQueue();
 
