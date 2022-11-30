@@ -7,6 +7,8 @@ namespace palPalani\SqsQueueReader\Tests;
 use palPalani\SqsQueueReader\Jobs\DispatcherJob;
 use palPalani\SqsQueueReader\Sqs\Queue;
 
+use function PHPUnit\Framework\assertTrue;
+
 /**
  * Class QueueTest
  */
@@ -35,5 +37,7 @@ class QueueTest extends TestCase
         $method->setAccessible(true);
 
         $method->invokeArgs($queue, [$job]);
+
+        assertTrue(true);
     }
 }

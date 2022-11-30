@@ -185,6 +185,21 @@ We already configured the script, just run the command:
 composer test
 ```
 
+For test coverage format, run the command:
+```bash
+composer test-coverage
+```
+For code analyse, run the command:
+
+```bash
+composer analyse
+```
+For code format, run the command:
+
+```bash
+composer format
+```
+
 ## Changelog
 
 Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
