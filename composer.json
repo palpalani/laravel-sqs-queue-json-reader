@@ -31,7 +31,7 @@
     },
     "require-dev": {
         "laravel/pint": "^1.2",
-        "nunomaduro/collision": "^6.3",
+        "nunomaduro/collision": "^7.0",
         "nunomaduro/larastan": "^2.2",
         "orchestra/testbench": "^7.15",
         "phpstan/extension-installer": "^1.2",
