@@ -1,8 +1,8 @@
 # Custom SQS queue reader for Laravel
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/palpalani/laravel-sqs-queue-json-reader.svg?style=flat-square)](https://packagist.org/packages/palpalani/laravel-sqs-queue-json-reader)
-[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/palpalani/laravel-sqs-queue-json-reader/run-tests?label=tests)](https://github.com/palpalani/laravel-sqs-queue-json-reader/actions?query=workflow%3ATests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/palpalani/laravel-sqs-queue-json-reader/Check%20&%20fix%20styling?label=code%20style)](https://github.com/palpalani/laravel-sqs-queue-json-reader/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain)
+[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/palpalani/laravel-sqs-queue-json-reader/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/palpalani/laravel-sqs-queue-json-reader/actions?query=workflow%3Arun-tests+branch%3Amain)
+[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/palpalani/laravel-sqs-queue-json-reader/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/palpalani/laravel-sqs-queue-json-reader/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/palpalani/laravel-sqs-queue-json-reader.svg?style=flat-square)](https://packagist.org/packages/palpalani/laravel-sqs-queue-json-reader)
 
 
