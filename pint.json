@@ -1,7 +1,8 @@
 {
     "preset": "laravel",
     "rules": {
-        "@PSR12": true,
+        "@PER": true,
+        "@PER:risky": true,
         "simplified_null_return": true,
         "braces": false,
         "new_with_braces": {
@@ -22,7 +23,10 @@
             ]
         },
         "declare_strict_types": true,
-        "not_operator_with_successor_space": true
+        "not_operator_with_successor_space": true,
+        "concat_space": {
+            "spacing": "one"
+        }
     },
     "exclude": [
         "build"
