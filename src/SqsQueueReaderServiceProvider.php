@@ -62,16 +62,23 @@ class SqsQueueReaderServiceProvider extends ServiceProvider
         $batchIds = array_column($data['data'], 'batchIds');
         $batchIds = array_chunk($batchIds, 10);
 
-        $client = new SqsClient([
+        $config = Config::get('queue.connections.sqs-json');
+
+        $sqsClientConfig = [
             //'profile' => 'default',
             'region' => Config::get('queue.connections.sqs-json.region'),
             'version' => '2012-11-05',
-            'credentials' => Arr::only(Config::get('queue.connections.sqs-json'), ['key', 'secret']),
             'http' => [
                 'timeout' => 30,
                 'connect_timeout' => 30,
             ],
-        ]);
+        ];
+
+        if ($config['key'] && $config['secret']) {
+            $sqsClientConfig['credentials'] = Arr::only($config, ['key', 'secret']);
+        }
+
+        $client = new SqsClient($sqsClientConfig);
 
         foreach ($batchIds as $batch) {
             //Deletes up to ten messages from the specified queue.
