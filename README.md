@@ -216,6 +216,34 @@ Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed re
 
 Please see [CONTRIBUTING](.github/CONTRIBUTING.md) for details.
 
+If you want to contribute, then you may want to test it in a real Laravel project:
+
+- Fork this repository to your GitHub account.
+- Create a Laravel app locally.
+- Clone your fork in your Laravel app's root directory.
+- In the `/laravel-sqs-queue-json-reader` directory, create a branch for your fix, e.g. `feature/awesome-feature`.
+
+Install the packages in your app's `composer.json`:
+
+```jsonc
+{
+    // ...
+    "require": {
+        "palpalani/laravel-sqs-queue-json-reader": "*",
+    },
+    "minimum-stability": "dev",
+    "repositories": [
+        {
+            "type": "path",
+            "url": "path/to/location"
+        }
+    ],
+    // ...
+}
+```
+
+Now, run `composer update`.
+
 ## Other Laravel packages
 
 [GrumPHP rector task](https://github.com/palpalani/grumphp-rector-task) GrumPHP with a task that runs [RectorPHP](https://github.com/rectorphp/rector-src) for your Laravel projects.
@@ -240,6 +268,10 @@ Please review [our security policy](../../security/policy) on how to report secu
 
 - [palPalani](https://github.com/palPalani)
 - [All Contributors](../../contributors)
+
+## Need Help?
+
+If you spot a bug or have a question or feature request, please [submit a detailed issue](https://github.com/palpalani/laravel-sqs-queue-json-reader/issues), and wait for assistance.
 
 ## License
 
