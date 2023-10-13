@@ -1,9 +1,9 @@
 # Custom SQS queue reader for Laravel
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/palpalani/laravel-sqs-queue-json-reader.svg?style=flat-square)](https://packagist.org/packages/palpalani/laravel-sqs-queue-json-reader)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/palpalani/laravel-sqs-queue-json-reader/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/palpalani/laravel-sqs-queue-json-reader/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/palpalani/laravel-sqs-queue-json-reader/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/palpalani/laravel-sqs-queue-json-reader/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
-[![Total Downloads](https://img.shields.io/packagist/dt/palpalani/laravel-sqs-queue-json-reader.svg?style=flat-square)](https://packagist.org/packages/palpalani/laravel-sqs-queue-json-reader)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/palpalani/laravel-sqs-queue-json-reader.svg?style=for-the-badge)](https://packagist.org/packages/palpalani/laravel-sqs-queue-json-reader)
+[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/palpalani/laravel-sqs-queue-json-reader/run-tests.yml?branch=main&label=tests&style=for-the-badge)](https://github.com/palpalani/laravel-sqs-queue-json-reader/actions?query=workflow%3Arun-tests+branch%3Amain)
+[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/palpalani/laravel-sqs-queue-json-reader/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=for-the-badge)](https://github.com/palpalani/laravel-sqs-queue-json-reader/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
+[![Total Downloads](https://img.shields.io/packagist/dt/palpalani/laravel-sqs-queue-json-reader.svg?style=for-the-badge)](https://packagist.org/packages/palpalani/laravel-sqs-queue-json-reader)
 <a href="https://laravel.com"><img alt="Laravel v10.x" src="https://img.shields.io/badge/Laravel-v10.x-FF2D20?style=for-the-badge&logo=laravel"></a>
 <!--
 <a href="https://livewire.laravel.com"><img alt="Livewire v3.x" src="https://img.shields.io/badge/Livewire-v3.x-FB70A9?style=for-the-badge"></a>
