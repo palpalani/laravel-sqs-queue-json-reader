@@ -54,7 +54,7 @@ class Queue extends SqsQueue
         $queueId = explode('/', $queue);
         $queueId = array_pop($queueId);
 
-        return (array_key_exists($queueId, Config::get('sqs-queue-reader.handlers')))
+        return (\array_key_exists($queueId, Config::get('sqs-queue-reader.handlers')))
             ? Config::get('sqs-queue-reader.handlers')[$queueId]['class']
             : Config::get('sqs-queue-reader.default-handler')['class'];
     }
@@ -74,7 +74,7 @@ class Queue extends SqsQueue
         $queueId = explode('/', $queue);
         $queueId = array_pop($queueId);
 
-        $count = (array_key_exists($queueId, Config::get('sqs-queue-reader.handlers')))
+        $count = (\array_key_exists($queueId, Config::get('sqs-queue-reader.handlers')))
             ? Config::get('sqs-queue-reader.handlers')[$queueId]['count']
             : Config::get('sqs-queue-reader.default-handler')['count'];
 
@@ -87,7 +87,7 @@ class Queue extends SqsQueue
             ]);
 
             if (isset($response['Messages']) && count($response['Messages']) > 0) {
-                $class = (array_key_exists($queueId, $this->container['config']->get('sqs-queue-reader.handlers')))
+                $class = (\array_key_exists($queueId, $this->container['config']->get('sqs-queue-reader.handlers')))
                     ? $this->container['config']->get('sqs-queue-reader.handlers')[$queueId]['class']
                     : $this->container['config']->get('sqs-queue-reader.default-handler')['class'];
 
