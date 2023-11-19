@@ -20,18 +20,18 @@ class SqsQueueReaderServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../config/sqs-queue-reader.php' => config_path('sqs-queue-reader.php'),
+                __DIR__ . '/../config/sqs-queue-reader.php' => config_path('sqs-queue-reader.php'),
             ], 'config');
 
             Queue::after(function (JobProcessed $event) {
                 $connections = Config::get('queue.connections');
-                if (in_array($event->connectionName, array_keys($connections), true)) {
+                if (\in_array($event->connectionName, array_keys($connections), true)) {
                     $queue = $event->job->getQueue();
 
                     $queueId = explode('/', $queue);
                     $queueId = array_pop($queueId);
 
-                    $count = (array_key_exists($queueId, Config::get('sqs-queue-reader.handlers')))
+                    $count = (\array_key_exists($queueId, Config::get('sqs-queue-reader.handlers')))
                         ? Config::get('sqs-queue-reader.handlers')[$queueId]['count']
                         : Config::get('sqs-queue-reader.default-handler')['count'];
 
@@ -47,7 +47,7 @@ class SqsQueueReaderServiceProvider extends ServiceProvider
 
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/sqs-queue-reader.php', 'sqs-queue-reader');
+        $this->mergeConfigFrom(__DIR__ . '/../config/sqs-queue-reader.php', 'sqs-queue-reader');
 
         $this->app->booted(function () {
             $this->app['queue']->extend('sqs-json', static function () {

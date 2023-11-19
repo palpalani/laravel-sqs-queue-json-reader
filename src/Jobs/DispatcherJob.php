@@ -17,9 +17,7 @@ class DispatcherJob implements ShouldQueue
 
     protected bool $plain = false;
 
-    public function __construct(protected $data)
-    {
-    }
+    public function __construct(protected $data) {}
 
     /**
      * @return mixed
@@ -37,7 +35,6 @@ class DispatcherJob implements ShouldQueue
     }
 
     /**
-     * @param  bool  $plain
      * @return $this
      */
     public function setPlain(bool $plain = true): self
@@ -47,9 +44,6 @@ class DispatcherJob implements ShouldQueue
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function isPlain(): bool
     {
         return $this->plain;
