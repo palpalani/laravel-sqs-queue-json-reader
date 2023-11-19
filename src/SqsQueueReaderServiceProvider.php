@@ -26,7 +26,6 @@ class SqsQueueReaderServiceProvider extends ServiceProvider
             Queue::after(function (JobProcessed $event) {
                 $connections = Config::get('queue.connections');
                 if (in_array($event->connectionName, array_keys($connections), true)) {
-                    //if ($event->connectionName === 'sqs-json' || $event->connectionName === 'sqs-mailgun' || $event->connectionName === 'sqs-external-customer-webhook' || $event->connectionName === 'sqs-priority-json') {
                     $queue = $event->job->getQueue();
 
                     $queueId = explode('/', $queue);
@@ -39,7 +38,7 @@ class SqsQueueReaderServiceProvider extends ServiceProvider
                     if ($count === 1) {
                         $event->job->delete();
                     } else {
-                        $this->removeMessages($event->job->payload(), $queue);
+                        $this->removeMessages($event->job->payload(), $queue, $event->connectionName);
                     }
                 }
             });
@@ -57,16 +56,16 @@ class SqsQueueReaderServiceProvider extends ServiceProvider
         });
     }
 
-    private function removeMessages(array $data, $queue): void
+    private function removeMessages(array $data, $queue, string $connection): void
     {
         $batchIds = array_column($data['data'], 'batchIds');
         $batchIds = array_chunk($batchIds, 10);
 
-        $config = Config::get('queue.connections.sqs-json');
+        $config = Config::get('queue.connections.' . $connection);
 
         $sqsClientConfig = [
             //'profile' => 'default',
-            'region' => Config::get('queue.connections.sqs-json.region'),
+            'region' => Config::get('queue.connections.' . $connection . '.region'),
             'version' => '2012-11-05',
             'http' => [
                 'timeout' => 30,
@@ -74,7 +73,7 @@ class SqsQueueReaderServiceProvider extends ServiceProvider
             ],
         ];
 
-        if ($config['key'] && $config['secret']) {
+        if (isset($config['key'], $config['secret'])) {
             $sqsClientConfig['credentials'] = Arr::only($config, ['key', 'secret']);
         }
 
