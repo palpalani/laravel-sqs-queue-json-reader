@@ -1,8 +1,8 @@
 {
     "preset": "laravel",
     "rules": {
-        "@PER": true,
-        "@PER:risky": true,
+        "@PER-CS": true,
+        "@PER-CS:risky": true,
         "simplified_null_return": true,
         "braces": false,
         "new_with_braces": {
