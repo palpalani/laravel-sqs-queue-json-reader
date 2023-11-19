@@ -6,46 +6,47 @@
 
 The Laravel SQS Queue Reader is a powerful extension designed to seamlessly integrate external webhooks into your Laravel application. By leveraging the reliability and scalability of Amazon Simple Queue Service (SQS), this extension ensures that your application efficiently processes incoming webhooks, minimizing downtime and enhancing overall performance.
 
-Key Features:
+### Key Features:
 
-Effortless Webhook Integration:
+#### Effortless Webhook Integration:
 
 Easily integrate external webhooks into your Laravel application without compromising on performance.
 
-Queue-Based Processing:
+#### Queue-Based Processing:
 
 Harness the power of Amazon SQS to queue incoming webhooks, allowing for asynchronous and parallel processing, ensuring optimal response times.
 
-Reliability and Scalability:
+#### Reliability and Scalability:
 
 SQS provides a robust and scalable infrastructure, ensuring that your application can handle varying webhook loads without compromising on stability.
 
-Seamless Laravel Integration:
+#### Seamless Laravel Integration:
 
 Designed as a Laravel extension, the Webhook Queue Reader seamlessly integrates into your Laravel project, following Laravel's coding standards and conventions.
 
-Configurable Settings:
+#### Configurable Settings:
 
 Customize the extension's settings to align with your application's requirements, including queue names, visibility timeout, and other SQS-specific configurations.
 
-Detailed Logging:
+#### Detailed Logging:
 
 Gain insights into the webhook processing flow with detailed logging, helping you troubleshoot and monitor the system effectively.
 
-How It Works:
+### How It Works:
 
-Webhook Registration:
+#### Webhook Registration:
 
 Register external webhooks with your Laravel application by providing the webhook URL.
 
-SQS Queue Integration:
+#### SQS Queue Integration:
 
 Incoming webhooks are efficiently processed through the SQS queue, ensuring optimal handling of webhook payloads.
-Asynchronous Processing:
+
+#### Asynchronous Processing:
 
 Leverage the asynchronous processing capabilities of SQS to handle webhooks in the background, preventing any impact on your application's response times.
 
-Automatic Retries:
+#### Automatic Retries:
 
 Benefit from SQS's automatic retries, ensuring that failed webhook processing attempts are retried without manual intervention.
 
@@ -182,7 +183,7 @@ Run the following commnd for testing the dispatched job.
 
 `php artisan queue:work sqs-json`
 
-For production, use supervisor with the following configuration.
+For `production`, use supervisor with the following configuration.
 
 ```
 [program:sqs-json-reader]
@@ -200,6 +201,9 @@ stderr_logfile=/tmp/horizon-error.log
 stopwaitsecs=3600
 priority=1000
 ```
+
+If you are using multiple connection, then duplicate above supervisor
+configutation and change the connection name.
 
 ### Receiving from SQS
 

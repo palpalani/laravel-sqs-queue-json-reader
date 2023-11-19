@@ -20,7 +20,7 @@ class Connector extends SqsConnector
     {
         $config = $this->getDefaultConfiguration($config);
 
-        if ($config['key'] && $config['secret']) {
+        if (isset($config['key'], $config['secret'])) {
             $config['credentials'] = Arr::only($config, ['key', 'secret']);
         }
 
