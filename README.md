@@ -4,6 +4,51 @@
     <img src="https://repository-images.githubusercontent.com/329289269/bf372113-a004-40f2-815b-300155f7a220" alt="Custom SQS queue reader for Laravel" style="width: 100%; max-width: 800px;" />
 </p>
 
+The Laravel SQS Queue Reader is a powerful extension designed to seamlessly integrate external webhooks into your Laravel application. By leveraging the reliability and scalability of Amazon Simple Queue Service (SQS), this extension ensures that your application efficiently processes incoming webhooks, minimizing downtime and enhancing overall performance.
+
+Key Features:
+
+Effortless Webhook Integration:
+
+Easily integrate external webhooks into your Laravel application without compromising on performance.
+
+Queue-Based Processing:
+
+Harness the power of Amazon SQS to queue incoming webhooks, allowing for asynchronous and parallel processing, ensuring optimal response times.
+
+Reliability and Scalability:
+
+SQS provides a robust and scalable infrastructure, ensuring that your application can handle varying webhook loads without compromising on stability.
+
+Seamless Laravel Integration:
+
+Designed as a Laravel extension, the Webhook Queue Reader seamlessly integrates into your Laravel project, following Laravel's coding standards and conventions.
+
+Configurable Settings:
+
+Customize the extension's settings to align with your application's requirements, including queue names, visibility timeout, and other SQS-specific configurations.
+
+Detailed Logging:
+
+Gain insights into the webhook processing flow with detailed logging, helping you troubleshoot and monitor the system effectively.
+
+How It Works:
+
+Webhook Registration:
+
+Register external webhooks with your Laravel application by providing the webhook URL.
+
+SQS Queue Integration:
+
+Incoming webhooks are efficiently processed through the SQS queue, ensuring optimal handling of webhook payloads.
+Asynchronous Processing:
+
+Leverage the asynchronous processing capabilities of SQS to handle webhooks in the background, preventing any impact on your application's response times.
+
+Automatic Retries:
+
+Benefit from SQS's automatic retries, ensuring that failed webhook processing attempts are retried without manual intervention.
+
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/palpalani/laravel-sqs-queue-json-reader.svg?style=for-the-badge)](https://packagist.org/packages/palpalani/laravel-sqs-queue-json-reader)
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/palpalani/laravel-sqs-queue-json-reader/run-tests.yml?branch=main&label=tests&style=for-the-badge)](https://github.com/palpalani/laravel-sqs-queue-json-reader/actions?query=workflow%3Arun-tests+branch%3Amain)
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/palpalani/laravel-sqs-queue-json-reader/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=for-the-badge)](https://github.com/palpalani/laravel-sqs-queue-json-reader/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
@@ -14,23 +59,23 @@
 -->
 <a href="https://php.net"><img alt="PHP 8.1" src="https://img.shields.io/badge/PHP-8.1-777BB4?style=for-the-badge&logo=php"></a>
 
-Custom SQS queue reader for Laravel projects that supports raw JSON payloads and reads multiple messages. Laravel expects SQS messages to be generated in a 
-specific format that includes job handler class and a serialized job.
+Custom SQS queue reader for Laravel projects that supports raw JSON payloads and reads multiple messages. Laravel expects SQS messages to be generated in a specific format that includes job handler class and a serialized job.
 
 Note: Implemented to read multiple messages from queue.
 
 This library is very useful when you want to parse messages from 3rd party 
 applications such as stripe webhooks, shopify webhooks, mailgun web hooks, custom JSON messages and so on.
 
-## Installation
+## Getting Started
 
-You can install the package via composer:
+Install Custom SQS queue reader for Laravel via composer:
 
 ```bash
 composer require palpalani/laravel-sqs-queue-json-reader
 ```
 
-You can publish the config file with:
+You can publish the config file and Configure your SQS settings in the Laravel configuration file.
+
 ```bash
 php artisan vendor:publish --provider="palPalani\SqsQueueReader\SqsQueueReaderServiceProvider" --tag="config"
 ```
@@ -69,7 +114,9 @@ return [
 
 If the queue is not found in 'handlers' array, SQS payload is passed to default handler.
 
-Add `sqs-json` connection to your config/queue.php, Ex:
+Register your webhooks with your Laravel application.
+
+Add `sqs-json` connection to your config/queue.php, Example:
 
 ```php
     [
@@ -91,7 +138,9 @@ In your .env file, choose sqs-json as your new default queue driver:
 QUEUE_DRIVER=sqs-json
 ```
 
-Dispatching to SQS
+Enjoy seamless, reliable, and scalable webhook processing!
+
+## Dispatching to SQS
 
 If you plan to push plain messages from Laravel, you can rely on DispatcherJob:
 
@@ -182,6 +231,12 @@ class SqsHandlerJob extends Job
     }
 }
 ```
+
+Note:
+
+Ensure that your Laravel application is configured with the necessary AWS credentials and permissions to interact with SQS.
+
+Enhance your Laravel application's webhook processing capabilities with the Laravel Webhook Queue Reader. Efficient, reliable, and designed for optimal performance!
 
 For more information about AWS SQS check [offical docs](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-configure-queue-parameters.html).
 
