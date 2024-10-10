@@ -3,7 +3,9 @@
     "rules": {
         "@PER-CS": true,
         "@PER-CS:risky": true,
+        "@PHP81Migration": true,
         "@PHP82Migration": true,
+        "@PHP83Migration": true,
         "simplified_null_return": true,
         "braces": false,
         "new_with_braces": {
