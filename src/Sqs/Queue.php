@@ -26,7 +26,7 @@ class Queue extends SqsQueue
      *
      * @throws JsonException
      */
-    protected function createPayload($job, $queue = null, $data = ''): string
+    protected function createPayload($job, $queue = null, $data = '', $delay = null): string
     {
         if (! $job instanceof DispatcherJob) {
             return parent::createPayload($job, $queue, $data);
