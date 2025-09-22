@@ -151,7 +151,7 @@ class SqsQueueReaderServiceProvider extends ServiceProvider
 
     /**
      * @param  array<string, mixed>  $payload
-     * @return array<int, array<string, mixed>>
+     * @return list<list<array<string, mixed>>>
      */
     private function extractBatchIds(array $payload): array
     {
