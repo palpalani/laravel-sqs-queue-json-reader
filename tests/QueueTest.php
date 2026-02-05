@@ -2,42 +2,45 @@
 
 declare(strict_types=1);
 
-namespace palPalani\SqsQueueReader\Tests;
-
 use palPalani\SqsQueueReader\Jobs\DispatcherJob;
 use palPalani\SqsQueueReader\Sqs\Queue;
 
-use function PHPUnit\Framework\assertTrue;
+it('can create payload for dispatcher job with default handler', function () {
+    $content = [
+        'test' => 'test',
+    ];
 
-/**
- * Class QueueTest
- */
-class QueueTest extends TestCase
-{
-    /**
-     * @test
-     */
-    public function class_named_is_derived_from_queue_name(): void
-    {
-        $content = [
-            'test' => 'test',
-        ];
+    $job = new DispatcherJob($content);
 
-        $job = new DispatcherJob($content);
+    $queue = Mockery::mock(Queue::class)
+        ->makePartial()
+        ->shouldAllowMockingProtectedMethods();
 
-        $queue = $this->getMockBuilder(Queue::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+    $payload = $queue->createPayload($job);
+    $decodedPayload = json_decode($payload, true);
 
-        $method = new \ReflectionMethod(
-            Queue::class,
-            'createPayload'
-        );
+    expect($payload)->toBeString()
+        ->and($decodedPayload)->toBeArray()
+        ->and($decodedPayload['job'])->toBe('App\Jobs\SqsHandler@handle')
+        ->and($decodedPayload['data'])->toHaveKey('job')
+        ->and($decodedPayload['data'])->toHaveKey('data')
+        ->and($decodedPayload['data']['data'])->toBe($content);
+});
 
-        $method->setAccessible(true);
+it('can create plain payload for dispatcher job', function () {
+    $content = [
+        'test' => 'test',
+    ];
 
-        $method->invokeArgs($queue, [$job]);
+    $job = new DispatcherJob($content);
+    $job->setPlain(true);
 
-        assertTrue(true);
-    }
-}
+    $queue = Mockery::mock(Queue::class)
+        ->makePartial()
+        ->shouldAllowMockingProtectedMethods();
+
+    $payload = $queue->createPayload($job);
+
+    expect($payload)->toBeString()
+        ->and(json_decode($payload, true))->toBe($content);
+});

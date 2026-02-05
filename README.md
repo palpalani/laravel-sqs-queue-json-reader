@@ -1,54 +1,54 @@
-# Custom SQS queue reader for Laravel
+# Custom SQS Queue Reader for Laravel
 
 <p align="center">
     <img src="https://repository-images.githubusercontent.com/329289269/bf372113-a004-40f2-815b-300155f7a220" alt="Custom SQS queue reader for Laravel" style="width: 100%; max-width: 800px;" />
 </p>
 
-The Laravel SQS Queue Reader is a powerful extension designed to seamlessly integrate external webhooks into your Laravel application. By leveraging the reliability and scalability of Amazon Simple Queue Service (SQS), this extension ensures that your application efficiently processes incoming webhooks, minimizing downtime and enhancing overall performance.
+The Laravel SQS Queue Reader is an extension designed to seamlessly integrate external webhooks into your Laravel application. By leveraging the reliability and scalability of Amazon Simple Queue Service (SQS), this package ensures your application efficiently processes incoming webhooks, minimizing downtime and enhancing overall performance.
 
-### Key Features:
+### Key Features
 
-#### Effortless Webhook Integration:
+#### Effortless Webhook Integration
 
-Easily integrate external webhooks into your Laravel application without compromising on performance.
+Easily integrate external webhooks into your Laravel application without compromising performance.
 
-#### Queue-Based Processing:
+#### Queue-Based Processing
 
-Harness the power of Amazon SQS to queue incoming webhooks, allowing for asynchronous and parallel processing, ensuring optimal response times.
+Harness Amazon SQS to queue incoming webhooks for asynchronous and parallel processing, ensuring optimal response times.
 
-#### Reliability and Scalability:
+#### Reliability and Scalability
 
-SQS provides a robust and scalable infrastructure, ensuring that your application can handle varying webhook loads without compromising on stability.
+SQS provides a robust and scalable infrastructure so your application can handle varying webhook loads without compromising stability.
 
-#### Seamless Laravel Integration:
+#### Seamless Laravel Integration
 
-Designed as a Laravel extension, the Webhook Queue Reader seamlessly integrates into your Laravel project, following Laravel's coding standards and conventions.
+Designed as a Laravel extension, the Queue Reader integrates cleanly into your project, following Laravel's coding standards and conventions.
 
-#### Configurable Settings:
+#### Configurable Settings
 
-Customize the extension's settings to align with your application's requirements, including queue names, visibility timeout, and other SQS-specific configurations.
+Customize settings to align with your application's requirements, including queue names, visibility timeout, and other SQS-specific configurations.
 
-#### Detailed Logging:
+#### Detailed Logging
 
-Gain insights into the webhook processing flow with detailed logging, helping you troubleshoot and monitor the system effectively.
+Gain insights into the webhook processing flow with detailed logging to help troubleshoot and monitor effectively.
 
-### How It Works:
+### How It Works
 
-#### Webhook Registration:
+#### Webhook Registration
 
 Register external webhooks with your Laravel application by providing the webhook URL.
 
-#### SQS Queue Integration:
+#### SQS Queue Integration
 
-Incoming webhooks are efficiently processed through the SQS queue, ensuring optimal handling of webhook payloads.
+Incoming webhooks are processed through the SQS queue, ensuring optimal handling of webhook payloads.
 
-#### Asynchronous Processing:
+#### Asynchronous Processing
 
-Leverage the asynchronous processing capabilities of SQS to handle webhooks in the background, preventing any impact on your application's response times.
+Leverage asynchronous processing to handle webhooks in the background, preventing impact on your application's response times.
 
-#### Automatic Retries:
+#### Automatic Retries
 
-Benefit from SQS's automatic retries, ensuring that failed webhook processing attempts are retried without manual intervention.
+Benefit from SQS automatic retries, ensuring failed webhook processing attempts are retried without manual intervention.
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/palpalani/laravel-sqs-queue-json-reader.svg?style=for-the-badge)](https://packagist.org/packages/palpalani/laravel-sqs-queue-json-reader)
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/palpalani/laravel-sqs-queue-json-reader/run-tests.yml?branch=main&label=tests&style=for-the-badge)](https://github.com/palpalani/laravel-sqs-queue-json-reader/actions?query=workflow%3Arun-tests+branch%3Amain)
@@ -60,28 +60,27 @@ Benefit from SQS's automatic retries, ensuring that failed webhook processing at
 -->
 <a href="https://php.net"><img alt="PHP 8.1" src="https://img.shields.io/badge/PHP-8.1-777BB4?style=for-the-badge&logo=php"></a>
 
-Custom SQS queue reader for Laravel projects that supports raw JSON payloads and reads multiple messages. Laravel expects SQS messages to be generated in a specific format that includes job handler class and a serialized job.
+Custom SQS queue reader for Laravel projects that supports raw JSON payloads and reads multiple messages. Laravel expects SQS messages to be generated in a specific format that includes a job handler class and a serialized job.
 
-Note: Implemented to read multiple messages from queue.
+Note: Implemented to read multiple messages from the queue.
 
-This library is very useful when you want to parse messages from 3rd party 
-applications such as stripe webhooks, shopify webhooks, mailgun web hooks, custom JSON messages and so on.
+This library is useful when you want to parse messages from 3rd-party applications such as Stripe webhooks, Shopify webhooks, Mailgun webhooks, custom JSON messages, and more.
 
 ## Getting Started
 
-Install Custom SQS queue reader for Laravel via composer:
+Install via Composer:
 
 ```bash
 composer require palpalani/laravel-sqs-queue-json-reader
 ```
 
-You can publish the config file and Configure your SQS settings in the Laravel configuration file.
+Publish the config file and configure your SQS settings in the Laravel configuration file:
 
 ```bash
 php artisan vendor:publish --provider="palPalani\SqsQueueReader\SqsQueueReaderServiceProvider" --tag="config"
 ```
 
-This is the contents of the published config file:
+This is the content of the published config file:
 
 ```php
 /**
@@ -113,11 +112,11 @@ return [
 ];
 ```
 
-If the queue is not found in 'handlers' array, SQS payload is passed to default handler.
+If the queue is not found in the `handlers` array, the SQS payload is passed to the default handler.
 
 Register your webhooks with your Laravel application.
 
-Add `sqs-json` connection to your config/queue.php, Example:
+Add an `sqs-json` connection to your `config/queue.php`. Example:
 
 ```php
     [
@@ -133,17 +132,17 @@ Add `sqs-json` connection to your config/queue.php, Example:
     ]
 ```
 
-In your .env file, choose sqs-json as your new default queue driver:
+In your `.env` file, choose `sqs-json` as your default queue connection:
 
 ```
-QUEUE_DRIVER=sqs-json
+QUEUE_CONNECTION=sqs-json
 ```
 
 Enjoy seamless, reliable, and scalable webhook processing!
 
 ## Dispatching to SQS
 
-If you plan to push plain messages from Laravel, you can rely on DispatcherJob:
+If you plan to push plain messages from Laravel, you can rely on `DispatcherJob`:
 
 ```php
 use palPalani\SqsQueueReader\Jobs\DispatcherJob;
@@ -168,22 +167,21 @@ class ExampleController extends Controller
     }
 }
 ```
-Above code will push the following JSON object to SQS queue:
+The above code will push the following JSON object to the SQS queue:
 
 ```json
-{"job":"App\\Jobs\\SqsHandler@handle","data":{"music":"Sample SQS message","singer":"AR. Rahman","time":1464511672}}
+{"job":"App\\Jobs\\SqsHandler@handle","data":{"music":"Ponni nathi from PS-1","singer":"AR. Rahman","time":1464511672}}
 ```
 
-'job' field is not used, actually. It's just kept for compatibility with Laravel
-Framework.
+The `job` field is not used; it is kept for compatibility with the Laravel framework.
 
-### Processing job
+### Processing Job
 
-Run the following commnd for testing the dispatched job.
+Run the following command to test the dispatched job.
 
 `php artisan queue:work sqs-json`
 
-For `production`, use supervisor with the following configuration.
+For production, use Supervisor with the following configuration.
 
 ```
 [program:sqs-json-reader]
@@ -202,14 +200,11 @@ stopwaitsecs=3600
 priority=1000
 ```
 
-If you are using multiple connection, then duplicate above supervisor
-configutation and change the connection name.
+If you are using multiple connections, duplicate the above Supervisor configuration and change the connection name.
 
 ### Receiving from SQS
 
-If a 3rd-party application or API Gateway to SQS implementation is creating 
-custom-format JSON messages, just add a 
-handler in the config file and implement a handler class as follows:
+If a 3rd-party application or an API Gateway-to-SQS implementation is creating custom-format JSON messages, add a handler in the config file and implement a handler class as follows:
 
 ```php
 use Illuminate\Contracts\Queue\Job as LaravelJob;
@@ -240,28 +235,28 @@ Note:
 
 Ensure that your Laravel application is configured with the necessary AWS credentials and permissions to interact with SQS.
 
-Enhance your Laravel application's webhook processing capabilities with the Laravel Webhook Queue Reader. Efficient, reliable, and designed for optimal performance!
+Enhance your Laravel application's webhook processing capabilities with the Laravel SQS Queue Reader. Efficient, reliable, and designed for optimal performance!
 
-For more information about AWS SQS check [offical docs](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-configure-queue-parameters.html).
+For more information about AWS SQS, check the [official docs](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-configure-queue-parameters.html).
 
 ## Testing
 
-We already configured the script, just run the command:
+We already configured the scripts; just run the command:
 
 ```bash
 composer test
 ```
 
-For test coverage format, run the command:
+For test coverage, run the command:
 ```bash
 composer test-coverage
 ```
-For code analyse, run the command:
+For code analysis, run the command:
 
 ```bash
 composer analyse
 ```
-For code format, run the command:
+For code formatting, run the command:
 
 ```bash
 composer format
@@ -275,14 +270,14 @@ Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed re
 
 Please see [CONTRIBUTING](.github/CONTRIBUTING.md) for details.
 
-If you want to contribute, then you may want to test it in a real Laravel project:
+If you want to contribute, you may want to test it in a real Laravel project:
 
 - Fork this repository to your GitHub account.
 - Create a Laravel app locally.
 - Clone your fork in your Laravel app's root directory.
 - In the `/laravel-sqs-queue-json-reader` directory, create a branch for your fix, e.g. `feature/awesome-feature`.
 
-Install the packages in your app's `composer.json`:
+Install the package in your app's `composer.json`:
 
 ```jsonc
 {
@@ -303,21 +298,21 @@ Install the packages in your app's `composer.json`:
 
 Now, run `composer update`.
 
-## Other Laravel packages
+## Other Laravel Packages
 
-[GrumPHP rector task](https://github.com/palpalani/grumphp-rector-task) GrumPHP with a task that runs [RectorPHP](https://github.com/rectorphp/rector-src) for your Laravel projects.
+[GrumPHP Rector task](https://github.com/palpalani/grumphp-rector-task) GrumPHP with a task that runs [RectorPHP](https://github.com/rectorphp/rector-src) for your Laravel projects.
 
-[Email Deny List (blacklist) Check - IP Deny List (blacklist) Check](https://github.com/palpalani/laravel-dns-deny-list-check) Deny list (blacklist) checker will test a mail server IP address against over 50 DNS based email blacklists. (Commonly called Realtime blacklist, DNSBL or RBL).
+[Email Deny List (blacklist) Check - IP Deny List (blacklist) Check](https://github.com/palpalani/laravel-dns-deny-list-check) Deny list (blacklist) checker that tests a mail server IP address against 50+ DNS-based email blacklists (commonly called Realtime blacklist, DNSBL, or RBL).
 
-[Spamassassin spam score of emails](https://github.com/palpalani/laravel-spamassassin-score) Checks the spam score of email contents using spamassassin database.
+[SpamAssassin spam score of emails](https://github.com/palpalani/laravel-spamassassin-score) Checks the spam score of email contents using the SpamAssassin database.
 
-[Laravel Login Notifications](https://github.com/palpalani/laravel-login-notifications) A login event notification for Laravel projects. By default, it will send notification only on production environment only.
+[Laravel Login Notifications](https://github.com/palpalani/laravel-login-notifications) A login event notification for Laravel projects. By default, it sends notifications only in the production environment.
 
-[Laravel Toastr](https://github.com/palpalani/laravel-toastr) Implements toastr.js for Laravel. Toastr.js is a Javascript library for non-blocking notifications.
+[Laravel Toastr](https://github.com/palpalani/laravel-toastr) Implements toastr.js for Laravel. Toastr.js is a JavaScript library for non-blocking notifications.
 
-[Beast](https://github.com/palpalani/beast) Beast is Screenshot as a Service using Nodejs, Chrome and Aws Lamda. Convert a webpage to an image using headless Chrome Takes screenshot of any given URL/Html content and returns base64 encoded buffer.
+[Beast](https://github.com/palpalani/beast) Beast is Screenshot as a Service using Node.js, Chrome, and AWS Lambda. Convert a webpage to an image using headless Chrome; takes a screenshot of any given URL/HTML content and returns a base64-encoded buffer.
 
-[eCommerce Product Recommendations](https://github.com/palpalani/eCommerce-Product-Recommendations) Analyse order history of customers and recommend products for new customers which enables higher sales volume.
+[eCommerce Product Recommendations](https://github.com/palpalani/eCommerce-Product-Recommendations) Analyze order history of customers and recommend products for new customers to enable higher sales volume.
 
 ## Security Vulnerabilities
 
@@ -330,7 +325,7 @@ Please review [our security policy](../../security/policy) on how to report secu
 
 ## Need Help?
 
-If you spot a bug or have a question or feature request, please [submit a detailed issue](https://github.com/palpalani/laravel-sqs-queue-json-reader/issues), and wait for assistance.
+If you spot a bug or have a question or feature request, please [submit a detailed issue](https://github.com/palpalani/laravel-sqs-queue-json-reader/issues) and wait for assistance.
 
 ## License
 
