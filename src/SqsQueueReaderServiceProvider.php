@@ -24,6 +24,10 @@ class SqsQueueReaderServiceProvider extends ServiceProvider
             ], 'config');
 
             Queue::after(function (JobProcessed $event) {
+                if ($event->job->isDeleted()) {
+                    return;
+                }
+
                 $connections = Config::get('queue.connections');
                 if (\in_array($event->connectionName, array_keys($connections), true)) {
                     $queue = $event->job->getQueue();
@@ -64,7 +68,6 @@ class SqsQueueReaderServiceProvider extends ServiceProvider
         $config = Config::get('queue.connections.' . $connection);
 
         $sqsClientConfig = [
-            //'profile' => 'default',
             'region' => Config::get('queue.connections.' . $connection . '.region'),
             'version' => '2012-11-05',
             'http' => [
@@ -80,7 +83,6 @@ class SqsQueueReaderServiceProvider extends ServiceProvider
         $client = new SqsClient($sqsClientConfig);
 
         foreach ($batchIds as $batch) {
-            //Deletes up to ten messages from the specified queue.
             try {
                 $result = $client->deleteMessageBatch([
                     'Entries' => $batch,
@@ -96,7 +98,6 @@ class SqsQueueReaderServiceProvider extends ServiceProvider
 
                     throw new \RuntimeException('Cannot delete some messages, consult log for more info!');
                 }
-                //Log::info('Message remove report:', [$result]);
             } catch (AwsException $e) {
                 Log::error('AWS SQS client error:', [$e->getMessage()]);
             }
