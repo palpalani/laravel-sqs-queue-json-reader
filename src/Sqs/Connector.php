@@ -26,7 +26,9 @@ class Connector extends SqsConnector
         return new Queue(
             new SqsClient($config),
             $config['queue'],
-            Arr::get($config, 'prefix', '')
+            Arr::get($config, 'prefix', ''),
+            Arr::get($config, 'suffix', ''),
+            Arr::get($config, 'after_commit', false)
         );
     }
 }
